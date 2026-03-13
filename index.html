@@ -1,121 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Face Me</title>
-
 <style>
 
 body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
-}
-
-nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 40px;
-    background:rgba(0,0,0,0.3);
-}
-
-nav h1{
-    margin:0;
-    font-size:24px;
-}
-
-nav a{
-    color:white;
-    text-decoration:none;
-    margin-left:20px;
-    font-size:16px;
-}
-
-nav a:hover{
-    color:#38bdf8;
-}
-
-.hero{
-    text-align:center;
-    padding:100px 20px;
-}
-
-.hero h2{
-    font-size:48px;
-    margin-bottom:10px;
-}
-
-.hero p{
-    font-size:18px;
-    opacity:0.8;
-}
-
-.search{
-    margin-top:30px;
-}
-
-.search input{
-    padding:12px;
-    width:260px;
-    border:none;
-    border-radius:6px;
-}
-
-.search button{
-    padding:12px 18px;
-    border:none;
-    border-radius:6px;
-    background:#38bdf8;
-    color:white;
-    cursor:pointer;
-}
-
-.search button:hover{
-    background:#0ea5e9;
+font-family:Arial;
+background:#0f172a;
+color:white;
+margin:0;
+text-align:center;
 }
 
 .container{
-    max-width:800px;
-    margin:auto;
-    padding:40px 20px;
+max-width:500px;
+margin:auto;
+margin-top:100px;
+background:#1e293b;
+padding:30px;
+border-radius:10px;
 }
 
-.card{
-    background:rgba(255,255,255,0.05);
-    padding:25px;
-    border-radius:10px;
-    margin-top:20px;
+input,textarea{
+width:90%;
+padding:10px;
+margin:10px;
+border-radius:6px;
+border:none;
 }
 
-textarea{
-    width:100%;
-    height:120px;
-    border:none;
-    border-radius:6px;
-    padding:10px;
+button{
+padding:10px 20px;
+border:none;
+background:#38bdf8;
+color:white;
+border-radius:6px;
+cursor:pointer;
 }
 
-button.save{
-    margin-top:10px;
-    padding:10px 18px;
-    border:none;
-    border-radius:6px;
-    background:#22c55e;
-    color:white;
-    cursor:pointer;
-}
-
-button.save:hover{
-    background:#16a34a;
-}
-
-footer{
-    text-align:center;
-    padding:30px;
-    opacity:0.6;
+#home{
+display:none;
 }
 
 </style>
@@ -123,50 +47,100 @@ footer{
 
 <body>
 
-<nav>
-<h1>Face Me</h1>
-<div>
-<a href="#">Home</a>
-<a href="#">Journey</a>
-<a href="#">Traits</a>
-<a href="#">About</a>
-</div>
-</nav>
+<div id="login" class="container">
 
-<section class="hero">
-<h2>Become the Person You Admire</h2>
-<p>A place to reflect, grow and track your traits.</p>
+<h2>Face Me</h2>
 
-<div class="search">
-<input type="text" placeholder="Search a trait...">
-<button>Search</button>
+<input id="username" placeholder="Username">
+
+<input id="password" type="password" placeholder="Password">
+
+<br>
+
+<button onclick="signup()">Sign Up</button>
+<button onclick="login()">Login</button>
+
 </div>
-</section>
+
+
+<div id="home">
+
+<h1>Welcome <span id="user"></span></h1>
 
 <div class="container">
 
-<div class="card">
-<h3>Today's Trait Reflection</h3>
+<h3>Create Your Profile</h3>
 
-<textarea placeholder="Write about your actions today..."></textarea>
+<input id="name" placeholder="Your Name">
 
-<br><br>
+<textarea id="bio" placeholder="Write about yourself"></textarea>
 
-<label><input type="checkbox"> Practiced the trait</label>
-<br>
-<label><input type="checkbox"> Failed today</label>
-
-<br>
-
-<button class="save">Save Reflection</button>
+<button onclick="saveProfile()">Save Profile</button>
 
 </div>
 
 </div>
 
-<footer>
-<p>Face Me • A space for growth and honesty</p>
-</footer>
+<script>
+
+function signup(){
+let u=document.getElementById("username").value
+let p=document.getElementById("password").value
+
+localStorage.setItem("username",u)
+localStorage.setItem("password",p)
+
+alert("Account created. Now login.")
+}
+
+function login(){
+
+let u=document.getElementById("username").value
+let p=document.getElementById("password").value
+
+if(u==localStorage.getItem("username") && p==localStorage.getItem("password")){
+
+localStorage.setItem("logged","yes")
+
+showHome()
+
+}
+else{
+
+alert("Wrong login")
+
+}
+
+}
+
+function showHome(){
+
+document.getElementById("login").style.display="none"
+document.getElementById("home").style.display="block"
+
+document.getElementById("user").innerText=localStorage.getItem("username")
+
+}
+
+function saveProfile(){
+
+let name=document.getElementById("name").value
+let bio=document.getElementById("bio").value
+
+localStorage.setItem("name",name)
+localStorage.setItem("bio",bio)
+
+alert("Profile saved")
+
+}
+
+if(localStorage.getItem("logged")=="yes"){
+
+showHome()
+
+}
+
+</script>
 
 </body>
 </html>
