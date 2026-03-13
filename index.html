@@ -1,327 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Face Me</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Face Me - Interactive</title>
 <style>
 body{
-  margin:0;
-  font-family:Arial;
-  background:#111;
-  color:white;
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
 }
-header{
-  text-align:center;
-  font-size:40px;
-  padding:20px;
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+    background:rgba(0,0,0,0.3);
 }
-.container{
-  display:flex;
-  height:90vh;
+nav h1{
+    margin:0;
+    font-size:24px;
 }
-.menu{
-  width:220px;
-  background:#1f1f1f;
-  padding-top:30px;
-  text-align:center;
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-size:16px;
 }
-.menu button{
-  display:block;
-  width:85%;
-  margin:10px auto;
-  padding:12px;
-  border:none;
-  background:#00bfff;
-  color:white;
-  border-radius:8px;
-  cursor:pointer;
+nav a:hover{
+    color:#38bdf8;
 }
-.menu button:disabled{
-  background:#555;
+section{
+    max-width:800px;
+    margin:auto;
+    padding:40px 20px;
 }
-.content{
-  flex:1;
-  padding:40px;
-  text-align:center;
-  overflow-y:auto;
+.card{
+    background:rgba(255,255,255,0.05);
+    padding:25px;
+    border-radius:10px;
+    margin-top:20px;
 }
-.hidden{display:none;}
-.pictureBox{
-  width:200px;
-  height:200px;
-  border:3px dashed gray;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+textarea, input, select{
+    width:100%;
+    border:none;
+    border-radius:6px;
+    padding:10px;
+    margin-top:10px;
 }
-.profilePic{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  object-fit:cover;
-  position:absolute;
-  top:20px;
-  left:20px;
-  border:2px solid white;
+button{
+    margin-top:10px;
+    padding:10px 18px;
+    border:none;
+    border-radius:6px;
+    background:#38bdf8;
+    color:white;
+    cursor:pointer;
 }
-input, select, textarea{
-  padding:10px;
-  margin:10px;
-  width:250px;
+button:hover{
+    background:#0ea5e9;
 }
-textarea{
-  resize:none;
-  height:60px;
+ul{
+    list-style:none;
+    padding-left:0;
 }
-ul{list-style:none;padding-left:0;}
-li{margin:5px 0;}
-button.smallBtn{padding:5px 8px;margin-left:5px;}
+li{
+    margin-top:5px;
+    background:rgba(255,255,255,0.1);
+    padding:8px;
+    border-radius:6px;
+}
+footer{
+    text-align:center;
+    padding:30px;
+    opacity:0.6;
+}
 </style>
 </head>
 <body>
 
-<header>FACE ME</header>
-<img id="displayPic" class="profilePic">
-
-<div class="container">
-<div class="menu">
-  <button id="loginBtn" onclick="show('loginPage')">Sign Up / Login</button>
-  <button id="profileBtn" onclick="show('profilePage')">Create Profile</button>
-  <button id="opt1" disabled onclick="show('habitsPage')">Habits</button>
-  <button id="opt2" disabled onclick="show('journalPage')">Journal</button>
-  <button id="opt3" disabled onclick="show('characterPage')">Character Traits</button>
-  <button id="opt4" disabled onclick="show('reminderPage')">Reminder</button>
-  <button id="opt5" disabled onclick="show('moodPage')">Mood</button>
-  <button onclick="show('home')">Back</button>
+<nav>
+<h1>Face Me</h1>
+<div>
+<a href="#mood">Mood</a>
+<a href="#journal">Journal</a>
+<a href="#reflection">Reflection</a>
 </div>
+</nav>
 
-<div class="content">
+<section id="mood" class="card">
+<h3>Mood Tracker</h3>
+<button onclick="addMood()">Record Mood</button>
+<ul id="moodList"></ul>
+</section>
 
-<!-- Home Page -->
-<div id="home" class="hidden">
-  <h2>Welcome to Your Dashboard</h2>
-  <p>Use the menu to navigate your activities.</p>
-</div>
+<section id="journal" class="card">
+<h3>Journal</h3>
+<input type="date" id="journalDate">
+<textarea id="journalEntry" placeholder="Write your journal here..."></textarea>
+<button onclick="saveJournal()">Save Entry</button>
+<button onclick="loadJournal()">Load Entry</button>
+</section>
 
-<!-- Login Page -->
-<div id="loginPage" class="hidden">
-  <h2>Login / Sign Up</h2>
-  <input id="loginEmail" placeholder="Email"><br>
-  <input id="loginPass" type="password" placeholder="Password"><br>
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Log In</button>
-</div>
+<section id="reflection" class="card">
+<h3>Today's Reflection</h3>
+<textarea id="reflectionText" placeholder="Write about your actions today..."></textarea>
+<label><input type="checkbox" id="goodTrait"> Practiced the trait</label><br>
+<label><input type="checkbox" id="badTrait"> Failed today</label><br>
+<button onclick="saveReflection()">Save Reflection</button>
+<ul id="reflectionList"></ul>
+</section>
 
-<!-- Profile Page -->
-<div id="profilePage" class="hidden">
-  <h2>Create Profile</h2>
-  <input id="username" placeholder="Username"><br>
-  <input type="file" id="profilePicInput"><br>
-  <button onclick="createProfile()">Create Profile</button>
-</div>
-
-<!-- Habits Page -->
-<div id="habitsPage" class="hidden">
-  <h2>Habits Tracker</h2>
-  <input id="habitInput" placeholder="Add habit"><button onclick="addHabit()">Add</button>
-  <ul id="habitList"></ul>
-</div>
-
-<!-- Journal Page -->
-<div id="journalPage" class="hidden">
-  <h2>Daily Journal</h2>
-  <textarea id="journalInput" placeholder="Write your thoughts..."></textarea><br>
-  <button onclick="saveJournal()">Save</button>
-  <ul id="journalList"></ul>
-</div>
-
-<!-- Character Page -->
-<div id="characterPage" class="hidden">
-  <h2>Character Tracker</h2>
-  <input id="traitInput" placeholder="Add new trait">
-  <select id="traitType">
-    <option value="good">Good</option>
-    <option value="bad">Bad</option>
-  </select>
-  <button onclick="addTrait()">Add Trait</button>
-  <ul id="goodTraits"></ul>
-  <ul id="badTraits"></ul>
-</div>
-
-<!-- Reminder Page -->
-<div id="reminderPage" class="hidden">
-  <h2>Reminders</h2>
-  <input id="reminderInput" placeholder="Add reminder"><button onclick="addReminder()">Add</button>
-  <ul id="reminderList"></ul>
-</div>
-
-<!-- Mood Page -->
-<div id="moodPage" class="hidden">
-  <h2>Mood Tracker</h2>
-  <select id="moodSelect">
-    <option value="">Select Mood</option>
-    <option value="happy">Happy</option>
-    <option value="sad">Sad</option>
-    <option value="angry">Angry</option>
-    <option value="neutral">Neutral</option>
-  </select>
-  <button onclick="saveMood()">Save Mood</button>
-  <ul id="moodList"></ul>
-</div>
-
-</div>
-</div>
+<footer>
+<p>Face Me • A space for growth and honesty</p>
+</footer>
 
 <script>
-/* ------------------- Navigation ------------------- */
-function show(page){
-  let pages=["home","loginPage","profilePage","habitsPage","journalPage","characterPage","reminderPage","moodPage"];
-  pages.forEach(p=>document.getElementById(p).classList.add("hidden"));
-  document.getElementById(page).classList.remove("hidden");
+// Mood Tracker
+function addMood(){
+    let mood = prompt("How is your mood today?");
+    if(mood){
+        let reason = prompt("Why do you feel that way?");
+        if(reason){
+            let entry = {mood, reason, date: new Date().toLocaleString()};
+            let moods = JSON.parse(localStorage.getItem('moods') || "[]");
+            moods.push(entry);
+            localStorage.setItem('moods', JSON.stringify(moods));
+            renderMoods();
+        }
+    }
 }
 
-/* ------------------- Login/Signup ------------------- */
-function signup(){
-  let email=document.getElementById("loginEmail").value;
-  let pass=document.getElementById("loginPass").value;
-  if(!email||!pass){alert("Enter email and password"); return;}
-  localStorage.setItem("face_email",email);
-  localStorage.setItem("face_pass",pass);
-  alert("Account created. You can now log in.");
-}
-
-function login(){
-  let email=document.getElementById("loginEmail").value;
-  let pass=document.getElementById("loginPass").value;
-  let savedEmail=localStorage.getItem("face_email");
-  let savedPass=localStorage.getItem("face_pass");
-  if(email===savedEmail && pass===savedPass){
-    unlockOptions();
-    show("home");
-  }else{alert("Incorrect email or password");}
-}
-
-/* ------------------- Profile ------------------- */
-function createProfile(){
-  let username=document.getElementById("username").value;
-  let file=document.getElementById("profilePicInput").files[0];
-  if(!username||!file){alert("Enter username and picture"); return;}
-  let reader=new FileReader();
-  reader.onload=function(){
-    localStorage.setItem("face_username",username);
-    localStorage.setItem("face_pic",reader.result);
-    document.getElementById("displayPic").src=reader.result;
-    unlockOptions();
-    alert("Profile created! Redirecting to Home.");
-    show("home");
-  }
-  reader.readAsDataURL(file);
-}
-
-function unlockOptions(){
-  ["opt1","opt2","opt3","opt4","opt5"].forEach(id=>{
-    document.getElementById(id).disabled=false;
-  });
-}
-
-/* ------------------- Habits ------------------- */
-let habits=JSON.parse(localStorage.getItem("habits"))||[];
-function addHabit(){
-  let val=document.getElementById("habitInput").value.trim();
-  if(!val) return;
-  habits.push(val);
-  localStorage.setItem("habits",JSON.stringify(habits));
-  renderHabits();
-}
-function renderHabits(){
-  const list=document.getElementById("habitList");
-  list.innerHTML="";
-  habits.forEach((h,i)=>{
-    const li=document.createElement("li");
-    li.textContent=h;
-    list.appendChild(li);
-  });
-}
-
-/* ------------------- Journal ------------------- */
-let journal=JSON.parse(localStorage.getItem("journal"))||[];
-function saveJournal(){
-  let val=document.getElementById("journalInput").value.trim();
-  if(!val) return;
-  journal.push(val);
-  localStorage.setItem("journal",JSON.stringify(journal));
-  document.getElementById("journalInput").value="";
-  renderJournal();
-}
-function renderJournal(){
-  const list=document.getElementById("journalList");
-  list.innerHTML="";
-  journal.forEach((entry,i)=>{
-    const li=document.createElement("li");
-    li.textContent=entry;
-    list.appendChild(li);
-  });
-}
-
-/* ------------------- Character Traits ------------------- */
-let goodTraits=JSON.parse(localStorage.getItem("goodTraits"))||[];
-let badTraits=JSON.parse(localStorage.getItem("badTraits"))||[];
-function addTrait(){
-  const t=document.getElementById("traitInput").value.trim();
-  const type=document.getElementById("traitType").value;
-  if(!t) return;
-  if(type==="good") goodTraits.push(t);
-  else badTraits.push(t);
-  localStorage.setItem("goodTraits",JSON.stringify(goodTraits));
-  localStorage.setItem("badTraits",JSON.stringify(badTraits));
-  document.getElementById("traitInput").value="";
-  renderTraits();
-}
-function renderTraits(){
-  const g=document.getElementById("goodTraits");
-  const b=document.getElementById("badTraits");
-  g.innerHTML=""; b.innerHTML="";
-  goodTraits.forEach(t=>{let li=document.createElement("li"); li.textContent=t; g.appendChild(li);});
-  badTraits.forEach(t=>{let li=document.createElement("li"); li.textContent=t; b.appendChild(li);});
-}
-
-/* ------------------- Reminder ------------------- */
-let reminders=JSON.parse(localStorage.getItem("reminders"))||[];
-function addReminder(){
-  const val=document.getElementById("reminderInput").value.trim();
-  if(!val) return;
-  reminders.push(val);
-  localStorage.setItem("reminders",JSON.stringify(reminders));
-  document.getElementById("reminderInput").value="";
-  renderReminders();
-}
-function renderReminders(){
-  const list=document.getElementById("reminderList");
-  list.innerHTML="";
-  reminders.forEach(r=>{let li=document.createElement("li"); li.textContent=r; list.appendChild(li);});
-}
-
-/* ------------------- Mood ------------------- */
-let moods=JSON.parse(localStorage.getItem("moods"))||[];
-function saveMood(){
-  const val=document.getElementById("moodSelect").value;
-  if(!val) return;
-  moods.push(val);
-  localStorage.setItem("moods",JSON.stringify(moods));
-  renderMoods();
-}
 function renderMoods(){
-  const list=document.getElementById("moodList");
-  list.innerHTML="";
-  moods.forEach(m=>{let li=document.createElement("li"); li.textContent=m; list.appendChild(li);});
+    let list = document.getElementById('moodList');
+    let moods = JSON.parse(localStorage.getItem('moods') || "[]");
+    list.innerHTML = "";
+    moods.forEach(m => {
+        let li = document.createElement('li');
+        li.textContent = `${m.date} — Mood: ${m.mood}, Reason: ${m.reason}`;
+        list.appendChild(li);
+    });
+}
+renderMoods();
+
+// Journal
+function saveJournal(){
+    let date = document.getElementById('journalDate').value;
+    let entry = document.getElementById('journalEntry').value;
+    if(date && entry){
+        localStorage.setItem('journal_' + date, entry);
+        alert("Journal entry saved!");
+    } else {
+        alert("Select a date and write something first.");
+    }
 }
 
-/* ------------------- On Load ------------------- */
-window.onload=function(){
-  const pic=localStorage.getItem("face_pic");
-  if(pic) document.getElementById("displayPic").src=pic;
-  renderHabits(); renderJournal(); renderTraits(); renderReminders(); renderMoods();
+function loadJournal(){
+    let date = document.getElementById('journalDate').value;
+    if(!date) { alert("Pick a date."); return; }
+    let entry = localStorage.getItem('journal_' + date);
+    document.getElementById('journalEntry').value = entry || "";
+    if(!entry) alert("No entry for this date.");
 }
+
+// Daily Reflection
+function saveReflection(){
+    let text = document.getElementById('reflectionText').value;
+    let good = document.getElementById('goodTrait').checked;
+    let bad = document.getElementById('badTrait').checked;
+    if(!text && !good && !bad){ alert("Write or check at least one box."); return; }
+    let reflections = JSON.parse(localStorage.getItem('reflections') || "[]");
+    reflections.push({
+        date: new Date().toLocaleString(),
+        text,
+        good,
+        bad
+    });
+    localStorage.setItem('reflections', JSON.stringify(reflections));
+    renderReflections();
+}
+
+function renderReflections(){
+    let list = document.getElementById('reflectionList');
+    let reflections = JSON.parse(localStorage.getItem('reflections') || "[]");
+    list.innerHTML = "";
+    reflections.forEach(r => {
+        let li = document.createElement('li');
+        li.textContent = `${r.date} — ${r.text} ${r.good ? "[Good]" : ""} ${r.bad ? "[Bad]" : ""}`;
+        list.appendChild(li);
+    });
+}
+renderReflections();
 </script>
 
 </body>
