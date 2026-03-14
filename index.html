@@ -5,53 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FaceMe App</title>
 <style>
-  /* Basic Reset */
   * { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
-  body { background: linear-gradient(to bottom, #f0f8ff, #a1c4fd); height:100vh; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+  body { background: linear-gradient(to bottom, #f0f8ff, #a1c4fd); min-height:100vh; display:flex; justify-content:center; align-items:center; }
 
   /* Cover Page */
-  #cover { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:absolute; transition:0.5s; }
-  #cover.active { z-index:1; }
+  #cover { width:100%; max-width:450px; padding:20px; display:flex; flex-direction:column; align-items:center; text-align:center; transition:0.5s; }
   #profile-pic { width:140px; height:140px; border-radius:50%; background:#fff; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer; }
   #profile-pic img { width:100%; height:100%; object-fit:cover; }
-  #cover-description { color:#333; font-size:18px; margin-bottom:20px; max-width:80%; }
+  #cover-description { color:#333; font-size:18px; margin-bottom:20px; }
   #start-btn { padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; cursor:pointer; transition:0.3s; animation: bounce 1s infinite alternate; }
   @keyframes bounce { 0%{transform:translateY(0);}100%{transform:translateY(-8px);} }
 
   /* Menu / Icons Page */
-  #menu { width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; position:absolute; transition:0.5s; }
-  #menu.active { display:flex; z-index:1; }
-  .icons-container { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:25px; justify-items:center; margin-top:50px; }
-  .icon { width:140px; height:140px; background:#fff; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; transition:0.3s; }
+  #menu { width:100%; max-width:500px; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .icons-container { display:grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap:20px; justify-items:center; margin-top:40px; }
+  .icon { width:120px; height:120px; background:#fff; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; transition:0.3s; }
   .icon:hover { transform:scale(1.1); }
-  .icon img { width:60px; height:60px; margin-bottom:10px; }
+  .icon img { width:50px; height:50px; margin-bottom:10px; }
   .icon span { font-size:16px; font-weight:bold; color:#333; }
 
-  /* Section Pages */
-  .section { width:100%; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; position:absolute; transition:0.5s; padding:20px; }
-  .section.active { display:flex; z-index:2; }
-  h2 { margin-bottom:15px; color:#333; }
-  input, textarea, select { padding:10px; margin:5px 0; border-radius:8px; border:1px solid #ccc; width:220px; }
+  /* Sections */
+  .section { width:100%; max-width:450px; display:none; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; text-align:center; margin-top:20px; }
+  .section h2 { margin-bottom:15px; color:#333; }
+  input, textarea, select { padding:10px; margin:5px 0; border-radius:8px; border:1px solid #ccc; width:100%; }
   textarea { resize:none; }
-  #save-btn, .save-btn { padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff; cursor:pointer; }
+  .save-btn { padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff; cursor:pointer; }
   .back-btn { margin-top:15px; padding:8px 15px; border:none; border-radius:8px; background:#e74c3c; color:#fff; cursor:pointer; }
 
   /* Notification */
   .notification { position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5; }
 
-  /* Responsive adjustments */
   @media (max-width:480px){
-    .icons-container { grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap:15px; }
-    .icon { width:120px; height:120px; }
-    .icon img { width:50px; height:50px; }
-    input, textarea, select { width:180px; }
+    .icon { width:100px; height:100px; }
+    .icon img { width:40px; height:40px; }
+    input, textarea, select { width:100%; }
   }
 </style>
 </head>
 <body>
 
 <!-- Cover Page -->
-<div id="cover" class="active">
+<div id="cover">
   <div id="profile-pic">
     <label for="profile-upload" style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;cursor:pointer;">
       <span style="color:#4a90e2;">Upload</span>
@@ -162,14 +156,14 @@ const sections = {
 };
 
 // Navigation
-startBtn.onclick = () => { cover.classList.remove("active"); menu.classList.add("active"); };
-function showSection(name){ menu.classList.remove("active"); for(let s in sections){ sections[s].classList.remove("active"); } sections[name].classList.add("active"); }
+startBtn.onclick = () => { cover.style.display="none"; menu.style.display="flex"; };
+function showSection(name){ menu.style.display="none"; for(let s in sections){ sections[s].style.display="none"; } sections[name].style.display="flex"; }
 document.getElementById("habit-icon").onclick = ()=> showSection("habit");
 document.getElementById("journal-icon").onclick = ()=> showSection("journal");
 document.getElementById("mood-icon").onclick = ()=> showSection("mood");
 document.getElementById("character-icon").onclick = ()=> showSection("character");
 document.getElementById("reminder-icon").onclick = ()=> showSection("reminder");
-document.querySelectorAll(".back-btn").forEach(b=>b.onclick=()=>{ for(let s in sections){ sections[s].classList.remove("active"); } menu.classList.add("active"); });
+document.querySelectorAll(".back-btn").forEach(b=>b.onclick=()=>{ for(let s in sections){ sections[s].style.display="none"; } menu.style.display="flex"; });
 
 // Notification
 function showNotif(){ notif.style.display="block"; setTimeout(()=>{ notif.style.display="none"; },1500); }
@@ -224,6 +218,5 @@ profileUpload.onchange=async e=>{
   profilePic.innerHTML=`<img src="${url}"/>`;
 };
 </script>
-
 </body>
 </html>
