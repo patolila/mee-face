@@ -5,36 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FaceMe App</title>
 <style>
-  * {margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
-  body {background: linear-gradient(135deg, #1a1a1a, #2c2c2c); color:#fff; min-height:100vh; display:flex; justify-content:center; align-items:center;}
-  button {cursor:pointer;}
-  
-  /* Cover Page */
-  #cover {width:100%; max-width:480px; text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
-  #profile-pic {width:160px; height:160px; border-radius:50%; background:#333; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer;}
-  #profile-pic img {width:100%; height:100%; object-fit:cover;}
-  #cover-description {margin-bottom:20px; font-size:18px;}
-  #start-btn {padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; animation: bounce 1s infinite alternate;}
-  @keyframes bounce {0%{transform:translateY(0);}100%{transform:translateY(-8px);}}
+* {margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
+body {background: linear-gradient(135deg,#1a1a1a,#2c2c2c); color:#fff; min-height:100vh; display:flex; justify-content:center; align-items:center;}
+button {cursor:pointer;}
 
-  /* Menu / Icons */
-  #menu {display:none; flex-direction:column; align-items:center; width:100%; max-width:500px;}
-  .icons-container {display:flex; gap:20px; overflow-x:auto; padding:20px;}
-  .icon {min-width:120px; min-height:120px; background:#444; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:0.3s;}
-  .icon:hover {transform:scale(1.1); box-shadow:0 8px 18px rgba(0,0,0,0.6);}
-  .icon img {width:60px; height:60px; margin-bottom:10px;}
-  .icon span {font-size:16px; font-weight:bold;}
+/* Cover Page */
+#cover {width:100%; max-width:480px; text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+#profile-pic {width:180px; height:180px; border-radius:50%; background:#333; border:4px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:20px; cursor:pointer; box-shadow:0 6px 15px rgba(0,0,0,0.5); transition:0.3s;}
+#profile-pic:hover {transform:scale(1.05);}
+#profile-pic img {width:100%; height:100%; object-fit:cover;}
+#cover-description {margin-bottom:20px; font-size:18px;}
+#start-btn {padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; animation: bounce 1s infinite alternate;}
+@keyframes bounce {0%{transform:translateY(0);}100%{transform:translateY(-8px);}}
 
-  /* Sections */
-  .section {display:none; flex-direction:column; align-items:center; padding:20px; max-width:480px; width:100%;}
-  .section h2 {margin-bottom:15px;}
-  input, textarea, select {padding:10px; margin:5px 0; border-radius:8px; border:none; width:100%;}
-  textarea {resize:none;}
-  .save-btn {padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff;}
-  .back-btn {margin-top:15px; padding:8px 15px; border:none; border-radius:8px; background:#e74c3c; color:#fff;}
+/* Menu / Icons */
+#menu {display:none; flex-direction:column; align-items:center; width:100%; max-width:500px;}
+.icons-container {display:flex; gap:20px; overflow-x:auto; padding:20px;}
+.icon {min-width:120px; min-height:120px; background:#444; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:0.3s;}
+.icon:hover {transform:scale(1.1); box-shadow:0 8px 18px rgba(0,0,0,0.6);}
+.icon img {width:60px; height:60px; margin-bottom:10px;}
+.icon span {font-size:16px; font-weight:bold;}
 
-  /* Notification */
-  .notification {position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5;}
+/* Sections */
+.section {display:none; flex-direction:column; align-items:center; padding:20px; max-width:480px; width:100%;}
+.section h2 {margin-bottom:15px;}
+input, textarea, select {padding:10px; margin:5px 0; border-radius:8px; border:none; width:100%;}
+textarea {resize:none;}
+.save-btn {padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff;}
+.back-btn {margin-top:15px; padding:8px 15px; border:none; border-radius:8px; background:#e74c3c; color:#fff;}
+
+/* Notification */
+.notification {position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5;}
 </style>
 </head>
 <body>
@@ -120,7 +121,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
-// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCdfjTsBr8jM01tyPeHqCD6IBhaBNWG4zs",
   authDomain: "facemeapp-da5fc.firebaseapp.com",
@@ -134,7 +134,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Elements
 const cover = document.getElementById("cover");
 const menu = document.getElementById("menu");
 const startBtn = document.getElementById("start-btn");
@@ -142,7 +141,6 @@ const profileUpload = document.getElementById("profile-upload");
 const profilePic = document.getElementById("profile-pic");
 const notif = document.getElementById("notif");
 
-// Sections
 const sections = {
   habit: document.getElementById("habit-section"),
   journal: document.getElementById("journal-section"),
@@ -151,7 +149,6 @@ const sections = {
   reminder: document.getElementById("reminder-section")
 };
 
-// Navigation
 startBtn.onclick = () => { cover.style.display="none"; menu.style.display="flex"; };
 function showSection(name){ menu.style.display="none"; for(let s in sections){ sections[s].style.display="none"; } sections[name].style.display="flex"; }
 document.getElementById("habit-icon").onclick = ()=> showSection("habit");
@@ -161,10 +158,8 @@ document.getElementById("character-icon").onclick = ()=> showSection("character"
 document.getElementById("reminder-icon").onclick = ()=> showSection("reminder");
 document.querySelectorAll(".back-btn").forEach(b=>b.onclick=()=>{ for(let s in sections){ sections[s].style.display="none"; } menu.style.display="flex"; });
 
-// Notification
 function showNotif(){ notif.style.display="block"; setTimeout(()=>{ notif.style.display="none"; },1500); }
 
-// Firebase Save Functions
 document.getElementById("habit-save").onclick = async ()=>{
   const val=document.getElementById("habit-input").value; if(!val) return;
   await setDoc(doc(collection(db,"habits")), {habit:val,timestamp:new Date()}); document.getElementById("habit-input").value=""; showNotif();
@@ -175,37 +170,28 @@ document.getElementById("journal-save").onclick = async ()=>{
   const title=document.getElementById("journal-title").value || "Journal";
   if(!val||!date) return;
   await setDoc(doc(collection(db,"journals")), {title,content:val,date,timestamp:new Date()});
-  document.getElementById("journal-input").value="";
-  document.getElementById("journal-title").value="";
-  document.getElementById("journal-date").value="";
-  showNotif();
+  document.getElementById("journal-input").value=""; document.getElementById("journal-title").value=""; document.getElementById("journal-date").value=""; showNotif();
 };
 document.getElementById("mood-save").onclick = async ()=>{
   const mood=document.getElementById("mood-select").value;
   const reason=document.getElementById("mood-reason").value;
   if(!mood) return;
   await setDoc(doc(collection(db,"moods")), {mood,reason,timestamp:new Date()});
-  document.getElementById("mood-select").value="";
-  document.getElementById("mood-reason").value="";
-  showNotif();
+  document.getElementById("mood-select").value=""; document.getElementById("mood-reason").value=""; showNotif();
 };
 document.getElementById("trait-save").onclick = async ()=>{
   const trait=document.getElementById("trait-select").value;
   const example=document.getElementById("trait-example").value;
   if(!trait) return;
   await setDoc(doc(collection(db,"traits")), {trait,example,timestamp:new Date()});
-  document.getElementById("trait-select").value="";
-  document.getElementById("trait-example").value="";
-  showNotif();
+  document.getElementById("trait-select").value=""; document.getElementById("trait-example").value=""; showNotif();
 };
 document.getElementById("reminder-save").onclick = async ()=>{
   const val=document.getElementById("reminder-input").value; if(!val) return;
   await setDoc(doc(collection(db,"reminders")), {reminder:val,timestamp:new Date()});
-  document.getElementById("reminder-input").value="";
-  showNotif();
+  document.getElementById("reminder-input").value=""; showNotif();
 };
 
-// Profile Upload
 profileUpload.onchange=async e=>{
   const file=e.target.files[0]; if(!file) return;
   const storageRef=ref(storage,"profile/"+file.name);
