@@ -1,494 +1,452 @@
-```html
 <!DOCTYPE html>
 <html>
-
 <head>
-
-<title>Face Me</title>
+<title>FaceMe</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Segoe UI;
-}
-
 body{
+font-family:Arial;
 margin:0;
+background:#0f172a;
 color:white;
-background:linear-gradient(-45deg,#0f0f0f,#1b1b1b,#101820,#000);
-background-size:400% 400%;
-animation:bgmove 12s infinite alternate;
 }
 
-/* BACKGROUND ANIMATION */
-
-@keyframes bgmove{
-0%{background-position:0% 50%;}
-100%{background-position:100% 50%;}
-}
-
-/* GENERAL */
-
-.page{
-display:none;
+header{
+text-align:center;
 padding:40px;
-max-width:1300px;
-margin:auto;
-animation:fade 0.6s;
+font-size:40px;
+font-weight:bold;
+background:linear-gradient(90deg,#6366f1,#22c55e);
 }
 
-@keyframes fade{
-from{opacity:0; transform:translateY(10px);}
-to{opacity:1; transform:translateY(0);}
+.container{
+padding:20px;
+max-width:900px;
+margin:auto;
 }
 
 button{
-padding:12px 22px;
+padding:12px 20px;
+margin:5px;
 border:none;
 border-radius:10px;
-background:#00bfff;
+background:#22c55e;
 color:white;
+font-size:16px;
 cursor:pointer;
-transition:0.3s;
 }
 
 button:hover{
 transform:scale(1.05);
 }
 
-input,textarea,select{
+.section{
+display:none;
+margin-top:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+margin-top:10px;
+border-radius:12px;
+}
+
+input,textarea{
 width:100%;
-max-width:450px;
 padding:10px;
-margin:10px 0;
+margin-top:10px;
 border-radius:8px;
 border:none;
 }
 
-.back{
-margin-bottom:20px;
+textarea{
+height:100px;
 }
 
-/* COVER */
-
-#cover{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
+.notification{
+position:fixed;
+top:20px;
+right:20px;
+background:red;
+width:18px;
+height:18px;
+border-radius:50%;
+display:none;
 }
 
-#cover h1{
-font-size:90px;
-margin:0;
+.reminder-popup{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#22c55e;
+padding:15px;
+border-radius:10px;
+display:none;
 }
 
-#cover p{
-max-width:600px;
-color:#ccc;
-font-size:18px;
-line-height:1.6;
-}
-
-.start{
-margin-top:30px;
-font-size:18px;
-padding:16px 45px;
-border-radius:30px;
-}
-
-/* DASHBOARD */
-
-.cards{
-margin-top:40px;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-gap:25px;
-}
-
-.card{
-background:rgba(255,255,255,0.05);
-padding:30px;
-border-radius:15px;
-text-align:center;
+.entry{
+background:#334155;
+padding:10px;
+border-radius:10px;
+margin-top:5px;
 cursor:pointer;
-transition:0.3s;
 }
 
-.card:hover{
-transform:translateY(-8px);
-background:rgba(255,255,255,0.09);
+.cover{
+text-align:center;
+padding:80px;
+font-size:28px;
+animation:fade 2s;
 }
 
-.card img{
-width:70px;
-margin-bottom:15px;
-}
-
-/* LISTS */
-
-ul{
-list-style:none;
-padding:0;
-}
-
-li{
-margin:6px 0;
+@keyframes fade{
+from{opacity:0}
+to{opacity:1}
 }
 
 </style>
-
 </head>
 
 <body>
 
+<div class="notification" id="notif"></div>
 
-<!-- COVER PAGE -->
+<header>FaceMe</header>
 
-<div id="cover" class="page" style="display:block">
+<div class="cover">
+<p>A safe place to grow, reflect and build yourself.</p>
+<button onclick="openSection('menu')">Start Journey</button>
+</div>
 
-<h1>FACE ME</h1>
+<div class="container">
 
-<p>
-Build a better future by understanding yourself today.
-Track your habits, capture your thoughts, and reflect on your emotions.
-Growth begins with awareness.
-</p>
+<div id="menu" class="section">
 
-<button class="start" onclick="openPage('home')">
-Start Your Journey
-</button>
+<button onclick="openSection('habit')">Habit</button>
+<button onclick="openSection('journal')">Journal</button>
+<button onclick="openSection('character')">Character</button>
+<button onclick="openSection('reminder')">Reminder</button>
+<button onclick="openSection('mood')">Mood</button>
 
 </div>
 
+<!-- HABIT -->
+<div id="habit" class="section">
 
+<h2>Habit Builder</h2>
 
-<!-- HOME DASHBOARD -->
+<input id="habitInput" placeholder="Enter habit you want to adopt">
 
-<div id="home" class="page">
+<button onclick="addHabit()">Add Habit</button>
 
-<button class="back" onclick="openPage('cover')">← Back</button>
-
-<h2>Your Dashboard</h2>
-
-<div class="cards">
-
-<div class="card" onclick="openPage('habits')">
-<img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png">
-<h3>Habits</h3>
-<p>Build discipline daily</p>
-</div>
-
-<div class="card" onclick="openPage('journal')">
-<img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png">
-<h3>Journal</h3>
-<p>Capture your thoughts</p>
-</div>
-
-<div class="card" onclick="openPage('traits')">
-<img src="https://cdn-icons-png.flaticon.com/512/747/747376.png">
-<h3>Character</h3>
-<p>Reflect on traits</p>
-</div>
-
-<div class="card" onclick="openPage('reminders')">
-<img src="https://cdn-icons-png.flaticon.com/512/1827/1827392.png">
-<h3>Reminders</h3>
-<p>Stay organised</p>
-</div>
-
-<div class="card" onclick="openPage('mood')">
-<img src="https://cdn-icons-png.flaticon.com/512/742/742751.png">
-<h3>Mood</h3>
-<p>Understand emotions</p>
-</div>
+<div id="habitList"></div>
 
 </div>
-
-</div>
-
-
-
-<!-- HABITS -->
-
-<div id="habits" class="page">
-
-<button class="back" onclick="openPage('home')">← Back</button>
-
-<h2>Habits</h2>
-
-<input id="habitInput" placeholder="New Habit">
-
-<button onclick="addHabit()">Add</button>
-
-<ul id="habitList"></ul>
-
-</div>
-
-
 
 <!-- JOURNAL -->
-
-<div id="journal" class="page">
-
-<button class="back" onclick="openPage('home')">← Back</button>
+<div id="journal" class="section">
 
 <h2>Journal</h2>
 
-<label>Select Date</label>
+<textarea id="journalText" placeholder="Write your thoughts..."></textarea>
 
-<input type="date" id="journalDate">
-
-<textarea id="journalText" placeholder="Write something..."></textarea>
+<input id="journalName" placeholder="Save entry as (example: Day 1, Reflection etc)">
 
 <button onclick="saveJournal()">Save</button>
-<button onclick="loadJournal()">Load</button>
+
+<div id="journalEntries"></div>
 
 </div>
 
-
-
-<!-- TRAITS -->
-
-<div id="traits" class="page">
-
-<button class="back" onclick="openPage('home')">← Back</button>
+<!-- CHARACTER -->
+<div id="character" class="section">
 
 <h2>Character Traits</h2>
 
-<input id="traitInput" placeholder="Trait">
+<input id="traitName" placeholder="Trait (example: kindness, discipline)">
 
-<select id="traitType">
-<option value="good">Good</option>
-<option value="bad">Bad</option>
-</select>
+<textarea id="traitStory" placeholder="Describe the moment you showed this trait"></textarea>
 
-<button onclick="addTrait()">Add</button>
+<label>
+<input type="checkbox" id="goodTrait"> This is a positive trait
+</label>
 
-<h3>Good</h3>
-<ul id="goodTraits"></ul>
+<button onclick="saveTrait()">Save Trait</button>
 
-<h3>Bad</h3>
-<ul id="badTraits"></ul>
+<div id="traitList"></div>
 
 </div>
 
+<!-- REMINDER -->
+<div id="reminder" class="section">
 
+<h2>Reminder</h2>
 
-<!-- REMINDERS -->
+<input type="date" id="reminderDate">
 
-<div id="reminders" class="page">
+<input id="reminderText" placeholder="Reminder text">
 
-<button class="back" onclick="openPage('home')">← Back</button>
+<button onclick="saveReminder()">Save Reminder</button>
 
-<h2>Reminders</h2>
+<div id="reminderList"></div>
 
-<input id="reminderInput" placeholder="Reminder">
-
-<button onclick="addReminder()">Add</button>
-
-<ul id="reminderList"></ul>
+<h3>Calendar</h3>
+<input type="date">
 
 </div>
-
-
 
 <!-- MOOD -->
+<div id="mood" class="section">
 
-<div id="mood" class="page">
+<h2>How is your mood?</h2>
 
-<button class="back" onclick="openPage('home')">← Back</button>
+<button onclick="saveMood('Happy')">Happy</button>
+<button onclick="saveMood('Neutral')">Neutral</button>
+<button onclick="saveMood('Sad')">Sad</button>
 
-<h2>How do you feel today?</h2>
-
-<select id="moodSelect">
-<option>Happy</option>
-<option>Neutral</option>
-<option>Sad</option>
-<option>Angry</option>
-</select>
-
-<textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
-
-<button onclick="saveMood()">Save</button>
-
-<ul id="moodList"></ul>
+<div id="moodResult"></div>
 
 </div>
 
+</div>
 
+<div class="reminder-popup" id="popup">Reminder Saved</div>
 
 <script>
 
-/* PAGE NAVIGATION */
+function openSection(id){
 
-function openPage(id){
-
-document.querySelectorAll(".page").forEach(p=>{
-p.style.display="none"
-})
+document.querySelectorAll(".section").forEach(s=>s.style.display="none")
 
 document.getElementById(id).style.display="block"
 
 }
 
 
-/* HABITS */
 
-let habits=JSON.parse(localStorage.getItem("habits"))||[]
+
+
+
+
+
+
+// HABIT
 
 function addHabit(){
 
-habits.push(habitInput.value)
+let habit=document.getElementById("habitInput").value
+
+let reflection=prompt("Why do you want this habit?")
+
+let data={habit,reflection}
+
+let habits=JSON.parse(localStorage.getItem("habits")||"[]")
+
+habits.push(data)
 
 localStorage.setItem("habits",JSON.stringify(habits))
 
-renderHabits()
+displayHabits()
 
 }
 
-function renderHabits(){
+function displayHabits(){
 
-habitList.innerHTML=""
+let habits=JSON.parse(localStorage.getItem("habits")||"[]")
+
+let box=document.getElementById("habitList")
+
+box.innerHTML=""
 
 habits.forEach(h=>{
-let li=document.createElement("li")
-li.textContent=h
-habitList.appendChild(li)
+
+let div=document.createElement("div")
+
+div.className="card"
+
+div.innerHTML="<b>"+h.habit+"</b><br>"+h.reflection
+
+box.appendChild(div)
+
 })
 
 }
 
+displayHabits()
 
-/* JOURNAL */
+
+
+
+
+
+
+// JOURNAL
 
 function saveJournal(){
 
-let date=journalDate.value
+let text=document.getElementById("journalText").value
 
-localStorage.setItem("journal_"+date,journalText.value)
+let name=document.getElementById("journalName").value
 
-alert("Saved")
+let entries=JSON.parse(localStorage.getItem("journals")||"[]")
 
-}
+entries.push({name,text})
 
-function loadJournal(){
+localStorage.setItem("journals",JSON.stringify(entries))
 
-let date=journalDate.value
-
-journalText.value=localStorage.getItem("journal_"+date)||""
+displayJournals()
 
 }
 
+function displayJournals(){
 
-/* TRAITS */
+let entries=JSON.parse(localStorage.getItem("journals")||"[]")
 
-let good=JSON.parse(localStorage.getItem("good"))||[]
-let bad=JSON.parse(localStorage.getItem("bad"))||[]
+let box=document.getElementById("journalEntries")
 
-function addTrait(){
+box.innerHTML=""
 
-if(traitType.value==="good")
-good.push(traitInput.value)
-else
-bad.push(traitInput.value)
+entries.forEach(e=>{
 
-localStorage.setItem("good",JSON.stringify(good))
-localStorage.setItem("bad",JSON.stringify(bad))
+let div=document.createElement("div")
 
-renderTraits()
+div.className="entry"
 
-}
+div.innerText=e.name
 
-function renderTraits(){
+div.onclick=()=>alert(e.text)
 
-goodTraits.innerHTML=""
-badTraits.innerHTML=""
+box.appendChild(div)
 
-good.forEach(t=>{
-let li=document.createElement("li")
-li.textContent=t
-goodTraits.appendChild(li)
-})
-
-bad.forEach(t=>{
-let li=document.createElement("li")
-li.textContent=t
-badTraits.appendChild(li)
 })
 
 }
 
+displayJournals()
 
-/* REMINDERS */
 
-let reminders=JSON.parse(localStorage.getItem("reminders"))||[]
 
-function addReminder(){
 
-reminders.push(reminderInput.value)
+
+
+
+// CHARACTER
+
+function saveTrait(){
+
+let name=document.getElementById("traitName").value
+
+let story=document.getElementById("traitStory").value
+
+let good=document.getElementById("goodTrait").checked
+
+let traits=JSON.parse(localStorage.getItem("traits")||"[]")
+
+traits.push({name,story,good})
+
+localStorage.setItem("traits",JSON.stringify(traits))
+
+displayTraits()
+
+}
+
+function displayTraits(){
+
+let traits=JSON.parse(localStorage.getItem("traits")||"[]")
+
+let box=document.getElementById("traitList")
+
+box.innerHTML=""
+
+traits.forEach(t=>{
+
+let div=document.createElement("div")
+
+div.className="entry"
+
+div.innerHTML=t.name + (t.good?" ✅":" ⚠️")
+
+div.onclick=()=>alert(t.story)
+
+box.appendChild(div)
+
+})
+
+}
+
+displayTraits()
+
+
+
+
+
+
+
+// REMINDERS
+
+function saveReminder(){
+
+let text=document.getElementById("reminderText").value
+
+let date=document.getElementById("reminderDate").value
+
+let reminders=JSON.parse(localStorage.getItem("reminders")||"[]")
+
+reminders.push({text,date})
 
 localStorage.setItem("reminders",JSON.stringify(reminders))
 
-renderReminders()
+document.getElementById("notif").style.display="block"
+
+let popup=document.getElementById("popup")
+
+popup.style.display="block"
+
+setTimeout(()=>popup.style.display="none",2000)
+
+displayReminders()
 
 }
 
-function renderReminders(){
+function displayReminders(){
 
-reminderList.innerHTML=""
+let reminders=JSON.parse(localStorage.getItem("reminders")||"[]")
+
+let box=document.getElementById("reminderList")
+
+box.innerHTML=""
 
 reminders.forEach(r=>{
-let li=document.createElement("li")
-li.textContent=r
-reminderList.appendChild(li)
+
+let div=document.createElement("div")
+
+div.className="card"
+
+div.innerHTML=r.date+" - "+r.text
+
+box.appendChild(div)
+
 })
 
 }
 
-
-/* MOOD */
-
-let moods=JSON.parse(localStorage.getItem("moods"))||[]
-
-function saveMood(){
-
-moods.push({
-mood:moodSelect.value,
-reason:moodReason.value,
-date:new Date().toLocaleDateString()
-})
-
-localStorage.setItem("moods",JSON.stringify(moods))
-
-renderMoods()
-
-}
-
-function renderMoods(){
-
-moodList.innerHTML=""
-
-moods.forEach(m=>{
-let li=document.createElement("li")
-li.textContent=m.date+" : "+m.mood+" ("+m.reason+")"
-moodList.appendChild(li)
-})
-
-}
+displayReminders()
 
 
-/* LOAD */
 
-window.onload=function(){
 
-renderHabits()
-renderTraits()
-renderReminders()
-renderMoods()
+
+
+
+// MOOD
+
+function saveMood(mood){
+
+localStorage.setItem("mood",mood)
+
+document.getElementById("moodResult").innerText="Your mood: "+mood
 
 }
 
@@ -496,4 +454,3 @@ renderMoods()
 
 </body>
 </html>
-```
