@@ -1,8 +1,8 @@
 ```html
 <!DOCTYPE html>
 <html>
-<head>
 
+<head>
 <title>Face Me</title>
 
 <style>
@@ -14,61 +14,16 @@ font-family:Segoe UI;
 
 body{
 margin:0;
-background:linear-gradient(135deg,#111,#1f1f1f,#000);
+background:linear-gradient(135deg,#0f0f0f,#1a1a1a,#000);
 color:white;
 }
 
-/* COVER PAGE */
+/* GENERAL */
 
-#cover{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-#cover h1{
-font-size:70px;
-margin:0;
-}
-
-#cover p{
-font-size:18px;
-color:#ccc;
-margin-top:10px;
-}
-
-.startBtn{
-margin-top:30px;
-padding:15px 40px;
-font-size:18px;
-border:none;
-border-radius:30px;
-background:#00bfff;
-color:white;
-cursor:pointer;
-}
-
-.startBtn:hover{
-transform:scale(1.05);
-}
-
-/* LOGIN */
-
-#loginPage{
-display:none;
-text-align:center;
-margin-top:100px;
-}
-
-input,textarea,select{
-padding:10px;
-margin:10px;
-width:250px;
-border-radius:6px;
-border:none;
+.container{
+max-width:1200px;
+margin:auto;
+padding:40px;
 }
 
 button{
@@ -78,29 +33,79 @@ border-radius:8px;
 background:#00bfff;
 color:white;
 cursor:pointer;
+transition:0.3s;
 }
 
 button:hover{
-opacity:0.8;
+transform:scale(1.05);
+}
+
+input,textarea,select{
+padding:10px;
+margin:10px 0;
+width:100%;
+max-width:400px;
+border:none;
+border-radius:6px;
+}
+
+.back{
+margin-bottom:20px;
+}
+
+/* PAGES */
+
+.page{
+display:none;
+animation:fade 0.6s;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* COVER */
+
+#cover{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+flex-direction:column;
+}
+
+#cover h1{
+font-size:80px;
+margin:0;
+}
+
+#cover p{
+color:#ccc;
+max-width:500px;
+margin-top:10px;
+line-height:1.5;
+}
+
+.startBtn{
+margin-top:30px;
+padding:15px 40px;
+font-size:18px;
+border-radius:30px;
 }
 
 /* DASHBOARD */
-
-#home{
-display:none;
-padding:40px;
-}
 
 .cards{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:20px;
-margin-top:40px;
+margin-top:30px;
 }
 
 .card{
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
 padding:30px;
 border-radius:15px;
 text-align:center;
@@ -109,15 +114,19 @@ transition:0.3s;
 }
 
 .card:hover{
-transform:translateY(-5px);
+transform:translateY(-6px);
 background:rgba(255,255,255,0.08);
 }
 
-/* FEATURE PAGES */
-
-.page{
-display:none;
-padding:40px;
+.profile{
+position:fixed;
+top:20px;
+right:20px;
+width:60px;
+height:60px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid white;
 }
 
 ul{
@@ -125,19 +134,8 @@ list-style:none;
 padding:0;
 }
 
-.profilePic{
-width:70px;
-height:70px;
-border-radius:50%;
-object-fit:cover;
-position:fixed;
-top:20px;
-right:20px;
-border:2px solid white;
-}
-
-.backBtn{
-margin-bottom:20px;
+li{
+margin:5px 0;
 }
 
 </style>
@@ -146,51 +144,74 @@ margin-bottom:20px;
 
 <body>
 
-<img id="profilePic" class="profilePic">
+<img id="profilePic" class="profile">
 
-<!-- COVER -->
+<!-- COVER PAGE -->
 
-<div id="cover">
+<div id="cover" class="page" style="display:block">
 
 <h1>FACE ME</h1>
 
-<p>A place to reflect, grow and stay accountable</p>
+<p>
+A private place to reflect on your habits, emotions, and growth.
+Track your discipline, record your thoughts, and understand
+yourself a little better every day.
+</p>
 
-<button class="startBtn" onclick="openLogin()">Start Journey</button>
+<button class="startBtn" onclick="openPage('login')">Start Journey</button>
 
 </div>
 
 
 <!-- LOGIN -->
 
-<div id="loginPage">
+<div id="login" class="page container">
 
-<h2>Login / Sign Up</h2>
+<button class="back" onclick="openPage('cover')">← Back</button>
 
-<input id="email" placeholder="Email"><br>
+<h2>Login</h2>
 
-<input id="password" type="password" placeholder="Password"><br>
+<input id="loginEmail" placeholder="Email">
 
-<button onclick="signup()">Sign Up</button>
+<input id="loginPass" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
-<br><br>
+<p>Don't have an account?</p>
 
-<h3>Create Profile</h3>
-
-<input id="username" placeholder="Username"><br>
-
-<input type="file" id="pic"><br>
-
-<button onclick="createProfile()">Create Profile</button>
+<button onclick="openPage('signup')">Create Account</button>
 
 </div>
 
 
-<!-- HOME DASHBOARD -->
+<!-- SIGNUP -->
 
-<div id="home">
+<div id="signup" class="page container">
+
+<button class="back" onclick="openPage('login')">← Back</button>
+
+<h2>Sign Up</h2>
+
+<input id="signEmail" placeholder="Email">
+
+<input id="signPass" type="password" placeholder="Password">
+
+<button onclick="signup()">Create Account</button>
+
+<h3>Create Profile</h3>
+
+<input id="username" placeholder="Username">
+
+<input type="file" id="pic">
+
+<button onclick="createProfile()">Save Profile</button>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<div id="home" class="page container">
 
 <h2 id="welcome"></h2>
 
@@ -203,12 +224,12 @@ margin-bottom:20px;
 
 <div class="card" onclick="openPage('journal')">
 <h3>Journal</h3>
-<p>Write thoughts</p>
+<p>Record thoughts</p>
 </div>
 
 <div class="card" onclick="openPage('traits')">
 <h3>Character</h3>
-<p>Build yourself</p>
+<p>Build values</p>
 </div>
 
 <div class="card" onclick="openPage('reminders')">
@@ -228,9 +249,9 @@ margin-bottom:20px;
 
 <!-- HABITS -->
 
-<div id="habits" class="page">
+<div id="habits" class="page container">
 
-<button class="backBtn" onclick="goHome()">Back</button>
+<button class="back" onclick="openPage('home')">← Back</button>
 
 <h2>Habits</h2>
 
@@ -245,28 +266,32 @@ margin-bottom:20px;
 
 <!-- JOURNAL -->
 
-<div id="journal" class="page">
+<div id="journal" class="page container">
 
-<button class="backBtn" onclick="goHome()">Back</button>
+<button class="back" onclick="openPage('home')">← Back</button>
 
 <h2>Journal</h2>
 
-<textarea id="journalText" placeholder="Write something..."></textarea>
+<label>Select Date</label>
+
+<input type="date" id="journalDate">
+
+<textarea id="journalText" placeholder="Write your thoughts"></textarea>
 
 <br>
 
 <button onclick="saveJournal()">Save</button>
 
-<ul id="journalList"></ul>
+<button onclick="loadJournal()">Load</button>
 
 </div>
 
 
 <!-- TRAITS -->
 
-<div id="traits" class="page">
+<div id="traits" class="page container">
 
-<button class="backBtn" onclick="goHome()">Back</button>
+<button class="back" onclick="openPage('home')">← Back</button>
 
 <h2>Character Traits</h2>
 
@@ -275,19 +300,16 @@ margin-bottom:20px;
 <select id="traitType">
 
 <option value="good">Good</option>
-
 <option value="bad">Bad</option>
 
 </select>
 
 <button onclick="addTrait()">Add</button>
 
-<h3>Good</h3>
-
+<h3>Good Traits</h3>
 <ul id="goodTraits"></ul>
 
-<h3>Bad</h3>
-
+<h3>Bad Traits</h3>
 <ul id="badTraits"></ul>
 
 </div>
@@ -295,9 +317,9 @@ margin-bottom:20px;
 
 <!-- REMINDERS -->
 
-<div id="reminders" class="page">
+<div id="reminders" class="page container">
 
-<button class="backBtn" onclick="goHome()">Back</button>
+<button class="back" onclick="openPage('home')">← Back</button>
 
 <h2>Reminders</h2>
 
@@ -312,11 +334,11 @@ margin-bottom:20px;
 
 <!-- MOOD -->
 
-<div id="mood" class="page">
+<div id="mood" class="page container">
 
-<button class="backBtn" onclick="goHome()">Back</button>
+<button class="back" onclick="openPage('home')">← Back</button>
 
-<h2>Mood Tracker</h2>
+<h2>How do you feel today?</h2>
 
 <select id="moodSelect">
 
@@ -327,7 +349,9 @@ margin-bottom:20px;
 
 </select>
 
-<button onclick="saveMood()">Save</button>
+<textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
+
+<button onclick="saveMood()">Save Mood</button>
 
 <ul id="moodList"></ul>
 
@@ -337,30 +361,15 @@ margin-bottom:20px;
 
 <script>
 
-/* NAVIGATION */
-
-function openLogin(){
-
-cover.style.display="none"
-loginPage.style.display="block"
-
-}
+/* PAGE SWITCH */
 
 function openPage(id){
 
-home.style.display="none"
-
-document.querySelectorAll(".page").forEach(p=>p.style.display="none")
+document.querySelectorAll(".page").forEach(p=>{
+p.style.display="none"
+})
 
 document.getElementById(id).style.display="block"
-
-}
-
-function goHome(){
-
-document.querySelectorAll(".page").forEach(p=>p.style.display="none")
-
-home.style.display="block"
 
 }
 
@@ -369,8 +378,8 @@ home.style.display="block"
 
 function signup(){
 
-localStorage.setItem("email",email.value)
-localStorage.setItem("password",password.value)
+localStorage.setItem("email",signEmail.value)
+localStorage.setItem("pass",signPass.value)
 
 alert("Account created")
 
@@ -379,14 +388,13 @@ alert("Account created")
 function login(){
 
 if(
-email.value===localStorage.getItem("email") &&
-password.value===localStorage.getItem("password")
+loginEmail.value===localStorage.getItem("email") &&
+loginPass.value===localStorage.getItem("pass")
 ){
 
-loginPage.style.display="none"
-home.style.display="block"
+openPage("home")
 
-unlock()
+welcome.innerText="Welcome "+localStorage.getItem("username")
 
 }
 
@@ -413,22 +421,13 @@ reader.readAsDataURL(pic.files[0])
 }
 
 
-/* UNLOCK FEATURES */
-
-function unlock(){
-
-welcome.innerText="Welcome "+localStorage.getItem("username")
-
-}
-
-
 /* HABITS */
 
 let habits=JSON.parse(localStorage.getItem("habits"))||[]
 
 function addHabit(){
 
-habits.push({name:habitInput.value,done:false})
+habits.push(habitInput.value)
 
 localStorage.setItem("habits",JSON.stringify(habits))
 
@@ -440,12 +439,10 @@ function renderHabits(){
 
 habitList.innerHTML=""
 
-habits.forEach((h,i)=>{
+habits.forEach(h=>{
 
 let li=document.createElement("li")
-
-li.innerHTML=`<input type="checkbox" ${h.done?"checked":""}
-onclick="toggleHabit(${i})"> ${h.name}`
+li.textContent=h
 
 habitList.appendChild(li)
 
@@ -453,47 +450,24 @@ habitList.appendChild(li)
 
 }
 
-function toggleHabit(i){
-
-habits[i].done=!habits[i].done
-
-localStorage.setItem("habits",JSON.stringify(habits))
-
-renderHabits()
-
-}
-
 
 /* JOURNAL */
 
-let journal=JSON.parse(localStorage.getItem("journal"))||[]
-
 function saveJournal(){
 
-journal.push({
-text:journalText.value,
-date:new Date().toLocaleDateString()
-})
+let date=journalDate.value
 
-localStorage.setItem("journal",JSON.stringify(journal))
+localStorage.setItem("journal_"+date,journalText.value)
 
-renderJournal()
+alert("Saved")
 
 }
 
-function renderJournal(){
+function loadJournal(){
 
-journalList.innerHTML=""
+let date=journalDate.value
 
-journal.forEach(j=>{
-
-let li=document.createElement("li")
-
-li.textContent=j.date+" : "+j.text
-
-journalList.appendChild(li)
-
-})
+journalText.value=localStorage.getItem("journal_"+date)||""
 
 }
 
@@ -570,10 +544,13 @@ let moods=JSON.parse(localStorage.getItem("moods"))||[]
 
 function saveMood(){
 
-moods.push({
+let entry={
 mood:moodSelect.value,
+reason:moodReason.value,
 date:new Date().toLocaleDateString()
-})
+}
+
+moods.push(entry)
 
 localStorage.setItem("moods",JSON.stringify(moods))
 
@@ -586,9 +563,13 @@ function renderMoods(){
 moodList.innerHTML=""
 
 moods.forEach(m=>{
+
 let li=document.createElement("li")
-li.textContent=m.date+" : "+m.mood
+
+li.textContent=m.date+" : "+m.mood+" ("+m.reason+")"
+
 moodList.appendChild(li)
+
 })
 
 }
@@ -602,7 +583,6 @@ if(localStorage.getItem("pic"))
 profilePic.src=localStorage.getItem("pic")
 
 renderHabits()
-renderJournal()
 renderTraits()
 renderReminders()
 renderMoods()
@@ -614,3 +594,4 @@ renderMoods()
 </body>
 </html>
 ```
+
