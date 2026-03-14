@@ -10,7 +10,7 @@
 
   /* Cover Page */
   #cover { width:100%; max-width:450px; padding:20px; display:flex; flex-direction:column; align-items:center; text-align:center; transition:0.5s; }
-  #profile-pic { width:140px; height:140px; border-radius:50%; background:#fff; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer; }
+  #profile-pic { width:160px; height:160px; border-radius:50%; background:#fff; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer; }
   #profile-pic img { width:100%; height:100%; object-fit:cover; }
   #cover-description { color:#333; font-size:18px; margin-bottom:20px; }
   #start-btn { padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; cursor:pointer; transition:0.3s; animation: bounce 1s infinite alternate; }
@@ -19,9 +19,9 @@
   /* Menu / Icons Page */
   #menu { width:100%; max-width:500px; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
   .icons-container { display:grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap:20px; justify-items:center; margin-top:40px; }
-  .icon { width:120px; height:120px; background:#fff; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; transition:0.3s; }
-  .icon:hover { transform:scale(1.1); }
-  .icon img { width:50px; height:50px; margin-bottom:10px; }
+  .icon { width:130px; height:130px; background:#fff; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; transition:0.3s; }
+  .icon:hover { transform:scale(1.1); box-shadow:0 8px 18px rgba(0,0,0,0.3); }
+  .icon img { width:60px; height:60px; margin-bottom:10px; }
   .icon span { font-size:16px; font-weight:bold; color:#333; }
 
   /* Sections */
@@ -36,8 +36,8 @@
   .notification { position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5; }
 
   @media (max-width:480px){
-    .icon { width:100px; height:100px; }
-    .icon img { width:40px; height:40px; }
+    .icon { width:110px; height:110px; }
+    .icon img { width:50px; height:50px; }
     input, textarea, select { width:100%; }
   }
 </style>
