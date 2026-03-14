@@ -1,195 +1,318 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>FaceMe Cloud</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FaceMe App</title>
 <style>
-body{font-family:Arial;margin:0;background:#0f172a;color:white;overflow-x:hidden}
-header{text-align:center;padding:40px;font-size:40px;font-weight:bold;background:linear-gradient(90deg,#6366f1,#22c55e)}
-.container{padding:20px;max-width:900px;margin:auto}
-button{padding:12px 20px;margin:5px;border:none;border-radius:12px;background:#22c55e;color:white;font-size:18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition: transform 0.3s, box-shadow 0.3s;box-shadow: 0 4px 6px rgba(0,0,0,0.3)}
-button:hover{transform:scale(1.08);box-shadow:0 6px 10px rgba(0,0,0,0.5)}
-.section{display:none;margin-top:20px}
-.card{background:#1e293b;padding:20px;margin-top:10px;border-radius:12px}
-input,textarea,select{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none}
-textarea{height:100px}
-.notification{position:fixed;top:20px;right:20px;background:red;width:18px;height:18px;border-radius:50%;display:none}
-.reminder-popup{position:fixed;bottom:20px;right:20px;background:#22c55e;padding:15px;border-radius:10px;display:none;font-weight:bold}
-.entry{background:#334155;padding:10px;border-radius:10px;margin-top:5px;cursor:pointer}
-.entry:hover{background:#475569}
-.cover{text-align:center;padding:60px 20px;font-size:28px;animation:fade 2s;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center}
-.cover img{border-radius:50%;width:180px;height:180px;object-fit:cover;margin:20px 0;border:3px solid #22c55e}
-.back-btn{background:#6366f1}
-.icon{width:30px;height:30px;margin-right:8px;fill:white}
-.menu-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:30px}
-.menu-btn{width:150px;height:120px;font-size:18px;flex-direction:column;justify-content:center;align-items:center;display:flex}
-.menu-btn svg{width:40px;height:40px;margin-bottom:5px;transition:transform 0.3s}
-.menu-btn:hover svg{transform:scale(1.2) rotate(5deg)}
-.calendar{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none}
-@keyframes fade{from{opacity:0} to{opacity:1}}
-@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-15px)}60%{transform:translateY(-8px)}}
-.sparkle{position:absolute;width:6px;height:6px;background:white;border-radius:50%;animation:float 5s linear infinite;opacity:0.7}
-@keyframes float{0%{transform:translateY(0) translateX(0);}50%{transform:translateY(-80px) translateX(50px);}100%{transform:translateY(-160px) translateX(0);}}
-@media(max-width:600px){.cover img{width:140px;height:140px}.menu-btn{width:120px;height:100px;font-size:16px}.menu-btn svg{width:35px;height:35px}}
+  body {
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:0;
+    background: linear-gradient(to bottom, #f0f8ff, #a1c4fd);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+  }
+  #cover, #menu, .section {
+    width:100%;
+    height:100%;
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:0.5s;
+  }
+  #cover.active, #menu.active, .section.active { z-index:1; }
+  #profile-pic {
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    margin-bottom:20px;
+    border:3px solid #4a90e2;
+  }
+  #profile-pic img { width:100%; height:100%; object-fit:cover; }
+  #start-btn {
+    padding:15px 25px;
+    font-size:18px;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    background:#4a90e2;
+    color:#fff;
+    transition:0.3s;
+    animation: bounce 1s infinite alternate;
+  }
+  @keyframes bounce { 0%{transform:translateY(0);}100%{transform:translateY(-10px);} }
+  .icons-container {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+  }
+  .icon {
+    width:120px;
+    height:120px;
+    background:#fff;
+    border-radius:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    cursor:pointer;
+    transition:0.3s;
+  }
+  .icon:hover { transform:scale(1.1); }
+  .icon img { width:50px; height:50px; margin-bottom:10px; }
+  .back-btn {
+    margin-top:20px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#e74c3c;
+    color:#fff;
+  }
+  input, textarea, select {
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
+    border:1px solid #ccc;
+    width:200px;
+  }
+  #save-btn {
+    padding:10px 20px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#27ae60;
+    color:#fff;
+    cursor:pointer;
+  }
+  .notification {
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#e74c3c;
+    color:#fff;
+    padding:8px 15px;
+    border-radius:10px;
+    display:none;
+  }
 </style>
 </head>
 <body>
 
-<div class="cover" id="cover">
-<h1>Welcome to FaceMe Cloud</h1>
-<img id="faceImg" style="display:none;">
-<input type="file" id="faceUpload" accept="image/*">
-<button id="startBtn">Start Your Journey</button>
+<div id="cover" class="active">
+  <div id="profile-pic">
+    <label for="profile-upload" style="cursor:pointer;width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+      <span style="color:#4a90e2;">Upload</span>
+    </label>
+    <input type="file" id="profile-upload" style="display:none;">
+  </div>
+  <button id="start-btn">Start Your Journey</button>
 </div>
 
-<div class="container" id="menu" style="display:none;">
-<h2>Menu</h2>
-<div class="menu-grid">
-  <button class="menu-btn" onclick="openSection('habit')">📝 Habit</button>
-  <button class="menu-btn" onclick="openSection('journal')">📔 Journal</button>
-  <button class="menu-btn" onclick="openSection('character')">💖 Character</button>
-  <button class="menu-btn" onclick="openSection('mood')">😃 Mood</button>
-  <button class="menu-btn" onclick="openSection('reminder')">⏰ Reminder</button>
+<div id="menu">
+  <div class="icons-container">
+    <div class="icon" id="habit-icon"><img src="https://img.icons8.com/ios/50/000000/todo-list.png"/><span>Habit</span></div>
+    <div class="icon" id="journal-icon"><img src="https://img.icons8.com/ios/50/000000/journal.png"/><span>Journal</span></div>
+    <div class="icon" id="mood-icon"><img src="https://img.icons8.com/ios/50/000000/happy.png"/><span>Mood</span></div>
+    <div class="icon" id="character-icon"><img src="https://img.icons8.com/ios/50/000000/positive-dynamic.png"/><span>Character</span></div>
+    <div class="icon" id="reminder-icon"><img src="https://img.icons8.com/ios/50/000000/alarm.png"/><span>Reminder</span></div>
+  </div>
 </div>
+
+<div id="habit-section" class="section">
+  <h2>Add Habit</h2>
+  <input type="text" id="habit-input" placeholder="Habit you want to adopt">
+  <button id="habit-save" class="save-btn">Save Habit</button>
+  <button class="back-btn">Back</button>
 </div>
 
-<div class="notification" id="notif"></div>
-<div class="reminder-popup" id="popup"></div>
+<div id="journal-section" class="section">
+  <h2>Journal</h2>
+  <input type="date" id="journal-date">
+  <textarea id="journal-input" placeholder="Write your journal"></textarea>
+  <input type="text" id="journal-title" placeholder="Save As (Title)">
+  <button id="journal-save" class="save-btn">Save Journal</button>
+  <button class="back-btn">Back</button>
+</div>
 
-<!-- Sections will be added dynamically by JS -->
+<div id="mood-section" class="section">
+  <h2>Mood</h2>
+  <select id="mood-select">
+    <option value="">Select Mood</option>
+    <option value="Happy">Happy</option>
+    <option value="Sad">Sad</option>
+    <option value="Excited">Excited</option>
+  </select>
+  <textarea id="mood-reason" placeholder="Why do you feel this way?"></textarea>
+  <button id="mood-save" class="save-btn">Save Mood</button>
+  <button class="back-btn">Back</button>
+</div>
 
-<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js"></script>
+<div id="character-section" class="section">
+  <h2>Character Trait</h2>
+  <select id="trait-select">
+    <option value="">Select Trait</option>
+    <option value="Kindness">Kindness</option>
+    <option value="Patience">Patience</option>
+    <option value="Honesty">Honesty</option>
+  </select>
+  <textarea id="trait-example" placeholder="Describe an instance of this trait"></textarea>
+  <button id="trait-save" class="save-btn">Save Trait</button>
+  <button class="back-btn">Back</button>
+</div>
 
-<script>
-// Initialize Firebase
-const firebaseConfig = {
+<div id="reminder-section" class="section">
+  <h2>Reminder</h2>
+  <input type="text" id="reminder-input" placeholder="Enter reminder">
+  <button id="reminder-save" class="save-btn">Save Reminder</button>
+  <button class="back-btn">Back</button>
+</div>
+
+<div class="notification" id="notif">Saved!</div>
+
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+  import { getFirestore, doc, setDoc, collection } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+
+  const firebaseConfig = {
     apiKey: "AIzaSyCdfjTsBr8jM01tyPeHqCD6IBhaBNWG4zs",
     authDomain: "facemeapp-da5fc.firebaseapp.com",
     projectId: "facemeapp-da5fc",
     storageBucket: "facemeapp-da5fc.firebasestorage.app",
     messagingSenderId: "496267641722",
     appId: "1:496267641722:web:e381a17b772739c8200cc3"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
+  };
 
-// Cover page start
-document.getElementById('startBtn').addEventListener('click',()=>{
-  document.getElementById('cover').style.display='none';
-  document.getElementById('menu').style.display='block';
-});
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
-// Profile picture upload
-const faceInput = document.getElementById('faceUpload');
-const faceImg = document.getElementById('faceImg');
-faceInput.addEventListener('change', async e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const storageRef = storage.ref('profile/'+file.name);
-  await storageRef.put(file);
-  const url = await storageRef.getDownloadURL();
-  faceImg.src = url;
-  faceImg.style.display='block';
-});
+  // Elements
+  const cover = document.getElementById("cover");
+  const menu = document.getElementById("menu");
+  const startBtn = document.getElementById("start-btn");
+  const profileUpload = document.getElementById("profile-upload");
+  const profilePic = document.getElementById("profile-pic");
 
-// Notifications
-function showNotification(){const notif=document.getElementById('notif');notif.style.display='block';setTimeout(()=>{notif.style.display='none'},1500);}
-function showPopup(msg){const popup=document.getElementById('popup');popup.textContent=msg;popup.style.display='block';setTimeout(()=>{popup.style.display='none'},2000);}
+  // Sections
+  const sections = {
+    habit: document.getElementById("habit-section"),
+    journal: document.getElementById("journal-section"),
+    mood: document.getElementById("mood-section"),
+    character: document.getElementById("character-section"),
+    reminder: document.getElementById("reminder-section")
+  };
 
-// Section handler
-function openSection(sec){
-  document.querySelectorAll('.section').forEach(s=>s.style.display='none');
-  if(!document.getElementById(sec)){
-    addSection(sec);
+  const notif = document.getElementById("notif");
+
+  startBtn.onclick = () => {
+    cover.classList.remove("active");
+    menu.classList.add("active");
+  };
+
+  function showSection(name){
+    menu.classList.remove("active");
+    for(let s in sections){ sections[s].classList.remove("active"); }
+    sections[name].classList.add("active");
   }
-  document.getElementById(sec).style.display='block';
-}
 
-// Create sections dynamically
-function addSection(sec){
-  let html='';
-  switch(sec){
-    case 'habit':
-      html=`<div class="section" id="habit">
-        <button class="back-btn" onclick="goBack('habit')">Back</button>
-        <h2>Habit Tracker</h2>
-        <input type="text" id="habitInput" placeholder="Enter habit">
-        <button onclick="saveHabit()">Save Habit</button>
-        <div id="habitList"></div>
-      </div>`; break;
-    case 'journal':
-      html=`<div class="section" id="journal">
-        <button class="back-btn" onclick="goBack('journal')">Back</button>
-        <h2>Journal</h2>
-        <input type="date" id="journalDate" class="calendar">
-        <input type="text" id="journalTitle" placeholder="Entry title">
-        <textarea id="journalText" placeholder="Write your journal..."></textarea>
-        <button onclick="saveJournal()">Save Journal</button>
-        <div id="journalList"></div>
-      </div>`; break;
-    case 'character':
-      html=`<div class="section" id="character">
-        <button class="back-btn" onclick="goBack('character')">Back</button>
-        <h2>Character Traits</h2>
-        <select id="traitSelect">
-          <option value="">Select Trait</option>
-          <option>Kindness</option>
-          <option>Patience</option>
-          <option>Honesty</option>
-        </select>
-        <textarea id="traitInstance" placeholder="Elaborate instance..."></textarea>
-        <button onclick="saveTrait()">Save Trait</button>
-        <div id="traitList"></div>
-      </div>`; break;
-    case 'mood':
-      html=`<div class="section" id="mood">
-        <button class="back-btn" onclick="goBack('mood')">Back</button>
-        <h2>Mood Tracker</h2>
-        <select id="moodSelect">
-          <option value="">Select Mood</option>
-          <option>Happy</option><option>Sad</option><option>Excited</option><option>Angry</option>
-        </select>
-        <textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
-        <button onclick="saveMood()">Save Mood</button>
-        <div id="moodList"></div>
-      </div>`; break;
-    case 'reminder':
-      html=`<div class="section" id="reminder">
-        <button class="back-btn" onclick="goBack('reminder')">Back</button>
-        <h2>Reminders</h2>
-        <input type="text" id="remText" placeholder="Reminder text">
-        <input type="date" id="remDate" class="calendar">
-        <button onclick="saveRem()">Save Reminder</button>
-        <div id="remList"></div>
-      </div>`; break;
+  document.getElementById("habit-icon").onclick = ()=> showSection("habit");
+  document.getElementById("journal-icon").onclick = ()=> showSection("journal");
+  document.getElementById("mood-icon").onclick = ()=> showSection("mood");
+  document.getElementById("character-icon").onclick = ()=> showSection("character");
+  document.getElementById("reminder-icon").onclick = ()=> showSection("reminder");
+
+  // Back buttons
+  document.querySelectorAll(".back-btn").forEach(b=>{
+    b.onclick = ()=>{
+      for(let s in sections){ sections[s].classList.remove("active"); }
+      menu.classList.add("active");
+    };
+  });
+
+  function showNotif(){
+    notif.style.display="block";
+    setTimeout(()=>{ notif.style.display="none"; },1500);
   }
-  document.body.insertAdjacentHTML('beforeend',html);
-}
 
-// Back button
-function goBack(sec){document.getElementById(sec).style.display='none';document.getElementById('menu').style.display='block';}
+  // Habit save
+  document.getElementById("habit-save").onclick = async ()=>{
+    const val = document.getElementById("habit-input").value;
+    if(!val) return;
+    await setDoc(doc(collection(db,"habits")), {habit:val, timestamp:new Date()});
+    document.getElementById("habit-input").value="";
+    showNotif();
+  };
 
-// Firebase functions
-function saveHabit(){const val=document.getElementById('habitInput').value.trim();if(!val){alert('Enter a habit');return;}db.collection('habits').doc(val).set({habit:val,timestamp:Date.now()});showNotification();document.getElementById('habitInput').value='';loadHabits();}
-function loadHabits(){const list=document.getElementById('habitList');if(!list) return;list.innerHTML='';db.collection('habits').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().habit;list.appendChild(div);});});}
+  // Journal save
+  document.getElementById("journal-save").onclick = async ()=>{
+    const val = document.getElementById("journal-input").value;
+    const date = document.getElementById("journal-date").value;
+    const title = document.getElementById("journal-title").value || "Journal";
+    if(!val || !date) return;
+    await setDoc(doc(collection(db,"journals")), {title, content:val, date, timestamp:new Date()});
+    document.getElementById("journal-input").value="";
+    document.getElementById("journal-title").value="";
+    document.getElementById("journal-date").value="";
+    showNotif();
+  };
 
-function saveJournal(){const date=document.getElementById('journalDate').value;const title=document.getElementById('journalTitle').value.trim();const text=document.getElementById('journalText').value.trim();if(!date||!title||!text){alert('Fill all fields');return;}db.collection('journals').doc(title).set({date,title,text,timestamp:Date.now()});showNotification();document.getElementById('journalDate').value='';document.getElementById('journalTitle').value='';document.getElementById('journalText').value='';loadJournals();}
-function loadJournals(){const list=document.getElementById('journalList');if(!list) return;list.innerHTML='';db.collection('journals').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().title+' ('+doc.data().date+')';list.appendChild(div);});});}
+  // Mood save
+  document.getElementById("mood-save").onclick = async ()=>{
+    const mood = document.getElementById("mood-select").value;
+    const reason = document.getElementById("mood-reason").value;
+    if(!mood) return;
+    await setDoc(doc(collection(db,"moods")), {mood, reason, timestamp:new Date()});
+    document.getElementById("mood-select").value="";
+    document.getElementById("mood-reason").value="";
+    showNotif();
+  };
 
-function saveTrait(){const trait=document.getElementById('traitSelect').value;const inst=document.getElementById('traitInstance').value.trim();if(!trait||!inst){alert('Select trait and write instance');return;}db.collection('traits').doc(trait).set({trait,instance:inst,timestamp:Date.now()});showNotification();document.getElementById('traitSelect').value='';document.getElementById('traitInstance').value='';loadTraits();}
-function loadTraits(){const list=document.getElementById('traitList');if(!list) return;list.innerHTML='';db.collection('traits').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().trait+': '+doc.data().instance;list.appendChild(div);});});}
+  // Character save
+  document.getElementById("trait-save").onclick = async ()=>{
+    const trait = document.getElementById("trait-select").value;
+    const example = document.getElementById("trait-example").value;
+    if(!trait) return;
+    await setDoc(doc(collection(db,"traits")), {trait, example, timestamp:new Date()});
+    document.getElementById("trait-select").value="";
+    document.getElementById("trait-example").value="";
+    showNotif();
+  };
 
-function saveMood(){const mood=document.getElementById('moodSelect').value;const reason=document.getElementById('moodReason').value.trim();if(!mood||!reason){alert('Select mood and write reason');return;}db.collection('moods').doc(mood).set({mood,reason,timestamp:Date.now()});showNotification();document.getElementById('moodSelect').value='';document.getElementById('moodReason').value='';loadMoods();}
-function loadMoods(){const list=document.getElementById('moodList');if(!list) return;list.innerHTML='';db.collection('moods').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().mood+': '+doc.data().reason;list.appendChild(div);});});}
+  // Reminder save
+  document.getElementById("reminder-save").onclick = async ()=>{
+    const val = document.getElementById("reminder-input").value;
+    if(!val) return;
+    await setDoc(doc(collection(db,"reminders")), {reminder:val, timestamp:new Date()});
+    document.getElementById("reminder-input").value="";
+    showNotif();
+  };
 
-function saveRem(){const text=document.getElementById('remText').value.trim();const date=document.getElementById('remDate').value;if(!text||!date){alert('Fill all fields');return;}db.collection('reminders').doc(text).set({text,date,timestamp:Date.now()});showPopup('Reminder Saved');document.getElementById('remText').value='';document.getElementById('remDate').value='';loadReminders();}
-function loadReminders(){const list=document.getElementById('remList');if(!list) return;list.innerHTML='';db.collection('reminders').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().date+' - '+doc.data().text;list.appendChild(div);});});}
+  // Profile picture upload
+  profileUpload.onchange = async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const storageRef = ref(storage,"profile/"+file.name);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    profilePic.innerHTML = `<img src="${url}"/>`;
+  };
 
-// Load all lists on startup
-loadHabits(); loadJournals(); loadTraits(); loadMoods(); loadReminders();
 </script>
 
 </body>
