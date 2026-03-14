@@ -1,387 +1,277 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FaceMe</title>
+<title>FaceMe Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{
-  font-family:Arial;
-  margin:0;
-  background:#0f172a;
-  color:white;
-  overflow-x:hidden;
-}
-
-header{
-  text-align:center;
-  padding:40px;
-  font-size:40px;
-  font-weight:bold;
-  background:linear-gradient(90deg,#6366f1,#22c55e);
-}
-
-.container{
-  padding:20px;
-  max-width:900px;
-  margin:auto;
-}
-
-button{
-  padding:12px 20px;
-  margin:5px;
-  border:none;
-  border-radius:10px;
-  background:#22c55e;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  transition: transform 0.3s;
-}
-
-button:hover{
-  transform:scale(1.05);
-}
-
-.section{
-  display:none;
-  margin-top:20px;
-}
-
-.card{
-  background:#1e293b;
-  padding:20px;
-  margin-top:10px;
-  border-radius:12px;
-}
-
-input,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  border-radius:8px;
-  border:none;
-}
-
-textarea{
-  height:100px;
-}
-
-.notification{
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:red;
-  width:18px;
-  height:18px;
-  border-radius:50%;
-  display:none;
-}
-
-.reminder-popup{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#22c55e;
-  padding:15px;
-  border-radius:10px;
-  display:none;
-}
-
-.entry{
-  background:#334155;
-  padding:10px;
-  border-radius:10px;
-  margin-top:5px;
-  cursor:pointer;
-}
-
-.cover{
-  text-align:center;
-  padding:60px 20px;
-  font-size:28px;
-  animation:fade 2s;
-  position:relative;
-  overflow:hidden;
-}
-
-.cover img{
-  border-radius:50%;
-  width:120px;
-  height:120px;
-  object-fit:cover;
-  margin-top:20px;
-  border:3px solid #22c55e;
-}
-
-.back-btn{
-  background:#6366f1;
-}
-
-.icon{
-  width:20px;
-  height:20px;
-  margin-right:8px;
-  fill:white;
-}
-
-@keyframes fade{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-/* Bouncing start button */
-@keyframes bounce{
-  0%,20%,50%,80%,100%{transform:translateY(0)}
-  40%{transform:translateY(-15px)}
-  60%{transform:translateY(-8px)}
-}
-
-/* Sparkle dots */
-.sparkle{
-  position:absolute;
-  width:6px;
-  height:6px;
-  background:white;
-  border-radius:50%;
-  animation:float 5s linear infinite;
-  opacity:0.7;
-}
-
-@keyframes float{
-  0%{transform:translateY(0) translateX(0);}
-  50%{transform:translateY(-80px) translateX(50px);}
-  100%{transform:translateY(-160px) translateX(0);}
-}
+body{font-family:Arial;margin:0;background:#0f172a;color:white;overflow-x:hidden}
+header{text-align:center;padding:40px;font-size:40px;font-weight:bold;background:linear-gradient(90deg,#6366f1,#22c55e)}
+.container{padding:20px;max-width:900px;margin:auto}
+button{padding:12px 20px;margin:5px;border:none;border-radius:12px;background:#22c55e;color:white;font-size:18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition: transform 0.3s, box-shadow 0.3s;box-shadow: 0 4px 6px rgba(0,0,0,0.3)}
+button:hover{transform:scale(1.08);box-shadow:0 6px 10px rgba(0,0,0,0.5)}
+.section{display:none;margin-top:20px}
+.card{background:#1e293b;padding:20px;margin-top:10px;border-radius:12px}
+input,textarea,select{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none}
+textarea{height:100px}
+.notification{position:fixed;top:20px;right:20px;background:red;width:18px;height:18px;border-radius:50%;display:none}
+.reminder-popup{position:fixed;bottom:20px;right:20px;background:#22c55e;padding:15px;border-radius:10px;display:none;font-weight:bold}
+.entry{background:#334155;padding:10px;border-radius:10px;margin-top:5px;cursor:pointer}
+.entry:hover{background:#475569}
+.cover{text-align:center;padding:60px 20px;font-size:28px;animation:fade 2s;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.cover img{border-radius:50%;width:180px;height:180px;object-fit:cover;margin:20px 0;border:3px solid #22c55e}
+.back-btn{background:#6366f1}
+.icon{width:30px;height:30px;margin-right:8px;fill:white}
+.menu-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:30px}
+.menu-btn{width:150px;height:120px;font-size:18px;flex-direction:column;justify-content:center;align-items:center;display:flex}
+.menu-btn svg{width:40px;height:40px;margin-bottom:5px;transition:transform 0.3s}
+.menu-btn:hover svg{transform:scale(1.2) rotate(5deg)}
+.calendar{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:none}
+@keyframes fade{from{opacity:0} to{opacity:1}}
+@keyframes bounce{0%,20%,50%,80%,100%{transform:translateY(0)}40%{transform:translateY(-15px)}60%{transform:translateY(-8px)}}
+.sparkle{position:absolute;width:6px;height:6px;background:white;border-radius:50%;animation:float 5s linear infinite;opacity:0.7}
+@keyframes float{0%{transform:translateY(0) translateX(0);}50%{transform:translateY(-80px) translateX(50px);}100%{transform:translateY(-160px) translateX(0);}}
+@media(max-width:600px){.cover img{width:140px;height:140px}.menu-btn{width:120px;height:100px;font-size:16px}.menu-btn svg{width:35px;height:35px}}
 </style>
-</head>
-<body>
 
-<div class="notification" id="notif"></div>
-<div class="reminder-popup" id="popup">Reminder Saved</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
-<header>FaceMe</header>
+const firebaseConfig = {
+    apiKey: "AIzaSyCdfjTsBr8jM01tyPeHqCD6IBhaBNWG4zs",
+    authDomain: "facemeapp-da5fc.firebaseapp.com",
+    projectId: "facemeapp-da5fc",
+    storageBucket: "facemeapp-da5fc.firebasestorage.app",
+    messagingSenderId: "496267641722",
+    appId: "1:496267641722:web:e381a17b772739c8200cc3"
+};
 
-<div class="cover" id="cover">
-  <p>A safe place to grow, reflect and build yourself.</p>
-  
-  <input type="file" id="faceUpload" accept="image/*" style="margin:10px auto; display:block;">
-  <img id="faceImg" src="" alt="" style="display:none;">
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-  <button id="startBtn" onclick="openSection('menu')">Start Journey</button>
-</div>
+window.db = db;
+window.storage = storage;
 
-<div class="container">
-
-<div id="menu" class="section">
-
-  <button onclick="openSection('habit')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zM3 17h2v-2H3v2zm4 0h14v-2H7v2zM3 9h2V7H3v2zm4 0h14V7H7v2z"/></svg>Habit
-  </button>
-  <button onclick="openSection('journal')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm0 4h18v14H3V7zm2 2v10h14V9H5z"/></svg>Journal
-  </button>
-  <button onclick="openSection('character')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Character
-  </button>
-  <button onclick="openSection('reminder')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6V9c0-3.07-1.63-5.64-4.5-6.32V2h-3v.68C7.63 3.36 6 5.92 6 9v7l-2 2v1h16v-1l-2-2z"/></svg>Reminder
-  </button>
-  <button onclick="openSection('mood')">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm-4-7h8v1H8v-1zm.5-4c.83 0 1.5.67 1.5 1.5S9.33 14 8.5 14 7 13.33 7 12.5 7.67 11 8.5 11zm7 0c.83 0 1.5.67 1.5 1.5S16.33 14 15.5 14 14 13.33 14 12.5 14.67 11 15.5 11z"/></svg>Mood
-  </button>
-
-</div>
-
-<!-- HABIT -->
-<div id="habit" class="section">
-  <button class="back-btn" onclick="openSection('menu')">← Back</button>
-  <h2>Habit Builder</h2>
-  <input id="habitInput" placeholder="Enter habit you want to adopt">
-  <button onclick="addHabit()">Add Habit</button>
-  <div id="habitList"></div>
-</div>
-
-<!-- JOURNAL -->
-<div id="journal" class="section">
-  <button class="back-btn" onclick="openSection('menu')">← Back</button>
-  <h2>Journal</h2>
-  <textarea id="journalText" placeholder="Write your thoughts..."></textarea>
-  <input id="journalName" placeholder="Save entry as (example: Day 1)">
-  <button onclick="saveJournal()">Save</button>
-  <div id="journalEntries"></div>
-</div>
-
-<!-- CHARACTER -->
-<div id="character" class="section">
-  <button class="back-btn" onclick="openSection('menu')">← Back</button>
-  <h2>Character Traits</h2>
-  <input id="traitName" placeholder="Trait (example: kindness)">
-  <textarea id="traitStory" placeholder="Describe the moment you showed this trait"></textarea>
-  <label><input type="checkbox" id="goodTrait"> Positive trait ✅</label>
-  <button onclick="saveTrait()">Save Trait</button>
-  <div id="traitList"></div>
-</div>
-
-<!-- REMINDER -->
-<div id="reminder" class="section">
-  <button class="back-btn" onclick="openSection('menu')">← Back</button>
-  <h2>Reminder</h2>
-  <input type="date" id="reminderDate">
-  <input id="reminderText" placeholder="Reminder text">
-  <button onclick="saveReminder()">Save Reminder</button>
-  <div id="reminderList"></div>
-</div>
-
-<!-- MOOD -->
-<div id="mood" class="section">
-  <button class="back-btn" onclick="openSection('menu')">← Back</button>
-  <h2>How is your mood?</h2>
-  <button onclick="saveMood('Happy')">Happy</button>
-  <button onclick="saveMood('Neutral')">Neutral</button>
-  <button onclick="saveMood('Sad')">Sad</button>
-  <div id="moodResult"></div>
-</div>
-
-<script>
-function openSection(id){
-  document.querySelectorAll(".section").forEach(s=>s.style.display="none")
-  document.getElementById(id).style.display="block"
-}
-
-// Cover button animation
-document.getElementById("startBtn").style.animation="bounce 2s infinite"
-
-// Sparkles
-for(let i=0;i<12;i++){
-  let s=document.createElement("div")
-  s.className="sparkle"
-  s.style.left=Math.random()*100+"%"
-  s.style.animationDuration=(3+Math.random()*4)+"s"
-  document.getElementById("cover").appendChild(s)
-}
+document.getElementById('startBtn').addEventListener('click',()=>{
+  document.getElementById('cover').style.display='none';
+  document.getElementById('menu').style.display='block';
+});
 
 // Profile picture upload
-let faceUpload=document.getElementById("faceUpload")
-let faceImg=document.getElementById("faceImg")
-faceUpload.addEventListener("change", e=>{
-  let reader=new FileReader()
-  reader.onload=()=> {
-    faceImg.src=reader.result
-    faceImg.style.display="block"
-    localStorage.setItem("face", reader.result)
+const faceInput = document.getElementById('faceUpload');
+const faceImg = document.getElementById('faceImg');
+faceInput.addEventListener('change', async e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const storageRef = ref(storage,'profile/'+file.name);
+  await uploadBytes(storageRef,file);
+  const url = await getDownloadURL(storageRef);
+  faceImg.src = url;
+  faceImg.style.display='block';
+});
+
+// General helper for notifications
+function showNotification() {
+  const notif = document.getElementById('notif');
+  notif.style.display='block';
+  setTimeout(()=>{notif.style.display='none'},1500);
+}
+
+function showPopup(msg){
+  const popup = document.getElementById('popup');
+  popup.textContent = msg;
+  popup.style.display='block';
+  setTimeout(()=>{popup.style.display='none'},2000);
+}
+
+// Section management
+function openSection(sec){
+  document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+  document.getElementById(sec).style.display='block';
+  if(!document.getElementById(sec).innerHTML.includes('back-btn')){
+    const back = document.createElement('button');
+    back.textContent='Back';
+    back.className='back-btn';
+    back.onclick=()=>{document.getElementById(sec).style.display='none';document.getElementById('menu').style.display='block';};
+    document.getElementById(sec).prepend(back);
   }
-  reader.readAsDataURL(e.target.files[0])
-})
-// Load saved face
-let savedFace=localStorage.getItem("face")
-if(savedFace){faceImg.src=savedFace; faceImg.style.display="block"}
+}
 
-// HABIT
-function addHabit(){
-  let habit=document.getElementById("habitInput").value
-  if(!habit) return alert("Type a habit first")
-  let reflection=prompt("Why do you want this habit?")
-  let data={habit,reflection}
-  let habits=JSON.parse(localStorage.getItem("habits")||"[]")
-  habits.push(data)
-  localStorage.setItem("habits",JSON.stringify(habits))
-  displayHabits()
-}
-function displayHabits(){
-  let habits=JSON.parse(localStorage.getItem("habits")||"[]")
-  let box=document.getElementById("habitList")
-  box.innerHTML=""
-  habits.forEach(h=>{
-    let div=document.createElement("div")
-    div.className="card"
-    div.innerHTML="<b>"+h.habit+"</b><br>"+h.reflection
-    box.appendChild(div)
-  })
-}
-displayHabits()
+// HABIT SECTION
+const habitSec = document.createElement('div');
+habitSec.id='habit'; habitSec.className='section';
+habitSec.innerHTML=`
+  <h2>Habit Tracker</h2>
+  <input type="text" id="habitInput" placeholder="Enter habit">
+  <button id="saveHabit">Save Habit</button>
+  <div id="habitList"></div>
+`;
+document.body.appendChild(habitSec);
 
-// JOURNAL
-function saveJournal(){
-  let text=document.getElementById("journalText").value
-  let name=document.getElementById("journalName").value
-  if(!text || !name) return alert("Add both text and name")
-  let entries=JSON.parse(localStorage.getItem("journals")||"[]")
-  entries.push({name,text})
-  localStorage.setItem("journals",JSON.stringify(entries))
-  displayJournals()
-}
-function displayJournals(){
-  let entries=JSON.parse(localStorage.getItem("journals")||"[]")
-  let box=document.getElementById("journalEntries")
-  box.innerHTML=""
-  entries.forEach(e=>{
-    let div=document.createElement("div")
-    div.className="entry"
-    div.innerText=e.name
-    div.onclick=()=>alert(e.text)
-    box.appendChild(div)
-  })
-}
-displayJournals()
+document.getElementById('saveHabit').addEventListener('click',async ()=>{
+  const val=document.getElementById('habitInput').value.trim();
+  if(!val) return alert('Enter a habit');
+  await setDoc(doc(db,'habits',val),{habit:val, timestamp:Date.now()});
+  showNotification();
+  document.getElementById('habitInput').value='';
+  loadHabits();
+});
 
-// CHARACTER
-function saveTrait(){
-  let name=document.getElementById("traitName").value
-  let story=document.getElementById("traitStory").value
-  let good=document.getElementById("goodTrait").checked
-  if(!name || !story) return alert("Add both trait and story")
-  let traits=JSON.parse(localStorage.getItem("traits")||"[]")
-  traits.push({name,story,good})
-  localStorage.setItem("traits",JSON.stringify(traits))
-  displayTraits()
+async function loadHabits(){
+  const list=document.getElementById('habitList');
+  list.innerHTML='';
+  const snap=await getDocs(collection(db,'habits'));
+  snap.forEach(docu=>{
+    const div=document.createElement('div');
+    div.className='entry';
+    div.textContent=docu.data().habit;
+    list.appendChild(div);
+  });
 }
-function displayTraits(){
-  let traits=JSON.parse(localStorage.getItem("traits")||"[]")
-  let box=document.getElementById("traitList")
-  box.innerHTML=""
-  traits.forEach(t=>{
-    let div=document.createElement("div")
-    div.className="entry"
-    div.innerHTML=t.name + (t.good?" ✅":" ⚠️")
-    div.onclick=()=>alert(t.story)
-    box.appendChild(div)
-  })
-}
-displayTraits()
+loadHabits();
 
-// REMINDERS
-function saveReminder(){
-  let text=document.getElementById("reminderText").value
-  let date=document.getElementById("reminderDate").value
-  if(!text || !date) return alert("Add both date and text")
-  let reminders=JSON.parse(localStorage.getItem("reminders")||"[]")
-  reminders.push({text,date})
-  localStorage.setItem("reminders",JSON.stringify(reminders))
-  document.getElementById("notif").style.display="block"
-  let popup=document.getElementById("popup")
-  popup.style.display="block"
-  setTimeout(()=>popup.style.display="none",2000)
-  displayReminders()
-}
-function displayReminders(){
-  let reminders=JSON.parse(localStorage.getItem("reminders")||"[]")
-  let box=document.getElementById("reminderList")
-  box.innerHTML=""
-  reminders.forEach(r=>{
-    let div=document.createElement("div")
-    div.className="card"
-    div.innerHTML=r.date+" - "+r.text
-    box.appendChild(div)
-  })
-}
-displayReminders()
+// JOURNAL SECTION
+const journalSec = document.createElement('div');
+journalSec.id='journal'; journalSec.className='section';
+journalSec.innerHTML=`
+<h2>Journal</h2>
+<input type="date" id="journalDate" class="calendar">
+<input type="text" id="journalTitle" placeholder="Entry title">
+<textarea id="journalText" placeholder="Write your journal..."></textarea>
+<button id="saveJournal">Save Journal</button>
+<div id="journalList"></div>
+`;
+document.body.appendChild(journalSec);
 
-// MOOD
-function saveMood(mood){
-  localStorage.setItem("mood",mood)
-  document.getElementById("moodResult").innerText="Your mood: "+mood
+document.getElementById('saveJournal').addEventListener('click',async ()=>{
+  const date=document.getElementById('journalDate').value;
+  const title=document.getElementById('journalTitle').value.trim();
+  const text=document.getElementById('journalText').value.trim();
+  if(!date||!title||!text) return alert('Fill all fields');
+  await setDoc(doc(db,'journals',title),{date,title,text,timestamp:Date.now()});
+  showNotification();
+  document.getElementById('journalTitle').value=''; document.getElementById('journalText').value=''; document.getElementById('journalDate').value='';
+  loadJournals();
+});
+
+async function loadJournals(){
+  const list=document.getElementById('journalList'); list.innerHTML='';
+  const snap=await getDocs(collection(db,'journals'));
+  snap.forEach(docu=>{
+    const div=document.createElement('div'); div.className='entry';
+    div.textContent=docu.data().title + ' ('+docu.data().date+')';
+    list.appendChild(div);
+  });
 }
+loadJournals();
+
+// CHARACTER TRAIT SECTION
+const charSec=document.createElement('div');
+charSec.id='character'; charSec.className='section';
+charSec.innerHTML=`
+<h2>Character Traits</h2>
+<select id="traitSelect">
+  <option value="">Select Trait</option>
+  <option>Kindness</option><option>Patience</option><option>Honesty</option>
+</select>
+<textarea id="traitInstance" placeholder="Elaborate instance..."></textarea>
+<button id="saveTrait">Save Trait</button>
+<div id="traitList"></div>
+`;
+document.body.appendChild(charSec);
+
+document.getElementById('saveTrait').addEventListener('click',async ()=>{
+  const trait=document.getElementById('traitSelect').value;
+  const inst=document.getElementById('traitInstance').value.trim();
+  if(!trait||!inst) return alert('Select trait and write instance');
+  await setDoc(doc(db,'traits',trait),{trait,instance:inst,timestamp:Date.now()});
+  showNotification();
+  document.getElementById('traitSelect').value=''; document.getElementById('traitInstance').value='';
+  loadTraits();
+});
+
+async function loadTraits(){
+  const list=document.getElementById('traitList'); list.innerHTML='';
+  const snap=await getDocs(collection(db,'traits'));
+  snap.forEach(docu=>{
+    const div=document.createElement('div'); div.className='entry';
+    div.textContent=docu.data().trait+': '+docu.data().instance;
+    list.appendChild(div);
+  });
+}
+loadTraits();
+
+// MOOD SECTION
+const moodSec=document.createElement('div');
+moodSec.id='mood'; moodSec.className='section';
+moodSec.innerHTML=`
+<h2>Mood Tracker</h2>
+<select id="moodSelect">
+  <option value="">Select Mood</option>
+  <option>Happy</option><option>Sad</option><option>Excited</option><option>Angry</option>
+</select>
+<textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
+<button id="saveMood">Save Mood</button>
+<div id="moodList"></div>
+`;
+document.body.appendChild(moodSec);
+
+document.getElementById('saveMood').addEventListener('click',async ()=>{
+  const mood=document.getElementById('moodSelect').value;
+  const reason=document.getElementById('moodReason').value.trim();
+  if(!mood||!reason) return alert('Select mood and write reason');
+  await setDoc(doc(db,'moods',mood),{mood,reason,timestamp:Date.now()});
+  showNotification();
+  document.getElementById('moodSelect').value=''; document.getElementById('moodReason').value='';
+  loadMoods();
+});
+
+async function loadMoods(){
+  const list=document.getElementById('moodList'); list.innerHTML='';
+  const snap=await getDocs(collection(db,'moods'));
+  snap.forEach(docu=>{
+    const div=document.createElement('div'); div.className='entry';
+    div.textContent=docu.data().mood+': '+docu.data().reason;
+    list.appendChild(div);
+  });
+}
+loadMoods();
+
+// REMINDER SECTION
+const remSec=document.createElement('div');
+remSec.id='reminder'; remSec.className='section';
+remSec.innerHTML=`
+<h2>Reminders</h2>
+<input type="text" id="remText" placeholder="Reminder text">
+<input type="date" id="remDate" class="calendar">
+<button id="saveRem">Save Reminder</button>
+<div id="remList"></div>
+`;
+document.body.appendChild(remSec);
+
+document.getElementById('saveRem').addEventListener('click',async ()=>{
+  const text=document.getElementById('remText').value.trim();
+  const date=document.getElementById('remDate').value;
+  if(!text||!date) return alert('Fill all fields');
+  await setDoc(doc(db,'reminders',text),{text,date,timestamp:Date.now()});
+  showPopup('Reminder Saved');
+  document.getElementById('remText').value=''; document.getElementById('remDate').value='';
+  loadReminders();
+});
+
+async function loadReminders(){
+  const list=document.getElementById('remList'); list.innerHTML='';
+  const snap=await getDocs(collection(db,'reminders'));
+  snap.forEach(docu=>{
+    const div=document.createElement('div'); div.className='entry';
+    div.textContent=docu.data().date+' - '+docu.data().text;
+    list.appendChild(div);
+  });
+}
+loadReminders();
+
 </script>
 </body>
 </html>
