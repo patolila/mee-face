@@ -32,12 +32,38 @@ textarea{height:100px}
 @keyframes float{0%{transform:translateY(0) translateX(0);}50%{transform:translateY(-80px) translateX(50px);}100%{transform:translateY(-160px) translateX(0);}}
 @media(max-width:600px){.cover img{width:140px;height:140px}.menu-btn{width:120px;height:100px;font-size:16px}.menu-btn svg{width:35px;height:35px}}
 </style>
+</head>
+<body>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
+<div class="cover" id="cover">
+<h1>Welcome to FaceMe Cloud</h1>
+<img id="faceImg" style="display:none;">
+<input type="file" id="faceUpload" accept="image/*">
+<button id="startBtn">Start Your Journey</button>
+</div>
 
+<div class="container" id="menu" style="display:none;">
+<h2>Menu</h2>
+<div class="menu-grid">
+  <button class="menu-btn" onclick="openSection('habit')">📝 Habit</button>
+  <button class="menu-btn" onclick="openSection('journal')">📔 Journal</button>
+  <button class="menu-btn" onclick="openSection('character')">💖 Character</button>
+  <button class="menu-btn" onclick="openSection('mood')">😃 Mood</button>
+  <button class="menu-btn" onclick="openSection('reminder')">⏰ Reminder</button>
+</div>
+</div>
+
+<div class="notification" id="notif"></div>
+<div class="reminder-popup" id="popup"></div>
+
+<!-- Sections will be added dynamically by JS -->
+
+<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js"></script>
+
+<script>
+// Initialize Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCdfjTsBr8jM01tyPeHqCD6IBhaBNWG4zs",
     authDomain: "facemeapp-da5fc.firebaseapp.com",
@@ -46,14 +72,11 @@ const firebaseConfig = {
     messagingSenderId: "496267641722",
     appId: "1:496267641722:web:e381a17b772739c8200cc3"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-window.db = db;
-window.storage = storage;
-
+// Cover page start
 document.getElementById('startBtn').addEventListener('click',()=>{
   document.getElementById('cover').style.display='none';
   document.getElementById('menu').style.display='block';
@@ -65,213 +88,109 @@ const faceImg = document.getElementById('faceImg');
 faceInput.addEventListener('change', async e=>{
   const file = e.target.files[0];
   if(!file) return;
-  const storageRef = ref(storage,'profile/'+file.name);
-  await uploadBytes(storageRef,file);
-  const url = await getDownloadURL(storageRef);
+  const storageRef = storage.ref('profile/'+file.name);
+  await storageRef.put(file);
+  const url = await storageRef.getDownloadURL();
   faceImg.src = url;
   faceImg.style.display='block';
 });
 
-// General helper for notifications
-function showNotification() {
-  const notif = document.getElementById('notif');
-  notif.style.display='block';
-  setTimeout(()=>{notif.style.display='none'},1500);
-}
+// Notifications
+function showNotification(){const notif=document.getElementById('notif');notif.style.display='block';setTimeout(()=>{notif.style.display='none'},1500);}
+function showPopup(msg){const popup=document.getElementById('popup');popup.textContent=msg;popup.style.display='block';setTimeout(()=>{popup.style.display='none'},2000);}
 
-function showPopup(msg){
-  const popup = document.getElementById('popup');
-  popup.textContent = msg;
-  popup.style.display='block';
-  setTimeout(()=>{popup.style.display='none'},2000);
-}
-
-// Section management
+// Section handler
 function openSection(sec){
   document.querySelectorAll('.section').forEach(s=>s.style.display='none');
-  document.getElementById(sec).style.display='block';
-  if(!document.getElementById(sec).innerHTML.includes('back-btn')){
-    const back = document.createElement('button');
-    back.textContent='Back';
-    back.className='back-btn';
-    back.onclick=()=>{document.getElementById(sec).style.display='none';document.getElementById('menu').style.display='block';};
-    document.getElementById(sec).prepend(back);
+  if(!document.getElementById(sec)){
+    addSection(sec);
   }
+  document.getElementById(sec).style.display='block';
 }
 
-// HABIT SECTION
-const habitSec = document.createElement('div');
-habitSec.id='habit'; habitSec.className='section';
-habitSec.innerHTML=`
-  <h2>Habit Tracker</h2>
-  <input type="text" id="habitInput" placeholder="Enter habit">
-  <button id="saveHabit">Save Habit</button>
-  <div id="habitList"></div>
-`;
-document.body.appendChild(habitSec);
-
-document.getElementById('saveHabit').addEventListener('click',async ()=>{
-  const val=document.getElementById('habitInput').value.trim();
-  if(!val) return alert('Enter a habit');
-  await setDoc(doc(db,'habits',val),{habit:val, timestamp:Date.now()});
-  showNotification();
-  document.getElementById('habitInput').value='';
-  loadHabits();
-});
-
-async function loadHabits(){
-  const list=document.getElementById('habitList');
-  list.innerHTML='';
-  const snap=await getDocs(collection(db,'habits'));
-  snap.forEach(docu=>{
-    const div=document.createElement('div');
-    div.className='entry';
-    div.textContent=docu.data().habit;
-    list.appendChild(div);
-  });
+// Create sections dynamically
+function addSection(sec){
+  let html='';
+  switch(sec){
+    case 'habit':
+      html=`<div class="section" id="habit">
+        <button class="back-btn" onclick="goBack('habit')">Back</button>
+        <h2>Habit Tracker</h2>
+        <input type="text" id="habitInput" placeholder="Enter habit">
+        <button onclick="saveHabit()">Save Habit</button>
+        <div id="habitList"></div>
+      </div>`; break;
+    case 'journal':
+      html=`<div class="section" id="journal">
+        <button class="back-btn" onclick="goBack('journal')">Back</button>
+        <h2>Journal</h2>
+        <input type="date" id="journalDate" class="calendar">
+        <input type="text" id="journalTitle" placeholder="Entry title">
+        <textarea id="journalText" placeholder="Write your journal..."></textarea>
+        <button onclick="saveJournal()">Save Journal</button>
+        <div id="journalList"></div>
+      </div>`; break;
+    case 'character':
+      html=`<div class="section" id="character">
+        <button class="back-btn" onclick="goBack('character')">Back</button>
+        <h2>Character Traits</h2>
+        <select id="traitSelect">
+          <option value="">Select Trait</option>
+          <option>Kindness</option>
+          <option>Patience</option>
+          <option>Honesty</option>
+        </select>
+        <textarea id="traitInstance" placeholder="Elaborate instance..."></textarea>
+        <button onclick="saveTrait()">Save Trait</button>
+        <div id="traitList"></div>
+      </div>`; break;
+    case 'mood':
+      html=`<div class="section" id="mood">
+        <button class="back-btn" onclick="goBack('mood')">Back</button>
+        <h2>Mood Tracker</h2>
+        <select id="moodSelect">
+          <option value="">Select Mood</option>
+          <option>Happy</option><option>Sad</option><option>Excited</option><option>Angry</option>
+        </select>
+        <textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
+        <button onclick="saveMood()">Save Mood</button>
+        <div id="moodList"></div>
+      </div>`; break;
+    case 'reminder':
+      html=`<div class="section" id="reminder">
+        <button class="back-btn" onclick="goBack('reminder')">Back</button>
+        <h2>Reminders</h2>
+        <input type="text" id="remText" placeholder="Reminder text">
+        <input type="date" id="remDate" class="calendar">
+        <button onclick="saveRem()">Save Reminder</button>
+        <div id="remList"></div>
+      </div>`; break;
+  }
+  document.body.insertAdjacentHTML('beforeend',html);
 }
-loadHabits();
 
-// JOURNAL SECTION
-const journalSec = document.createElement('div');
-journalSec.id='journal'; journalSec.className='section';
-journalSec.innerHTML=`
-<h2>Journal</h2>
-<input type="date" id="journalDate" class="calendar">
-<input type="text" id="journalTitle" placeholder="Entry title">
-<textarea id="journalText" placeholder="Write your journal..."></textarea>
-<button id="saveJournal">Save Journal</button>
-<div id="journalList"></div>
-`;
-document.body.appendChild(journalSec);
+// Back button
+function goBack(sec){document.getElementById(sec).style.display='none';document.getElementById('menu').style.display='block';}
 
-document.getElementById('saveJournal').addEventListener('click',async ()=>{
-  const date=document.getElementById('journalDate').value;
-  const title=document.getElementById('journalTitle').value.trim();
-  const text=document.getElementById('journalText').value.trim();
-  if(!date||!title||!text) return alert('Fill all fields');
-  await setDoc(doc(db,'journals',title),{date,title,text,timestamp:Date.now()});
-  showNotification();
-  document.getElementById('journalTitle').value=''; document.getElementById('journalText').value=''; document.getElementById('journalDate').value='';
-  loadJournals();
-});
+// Firebase functions
+function saveHabit(){const val=document.getElementById('habitInput').value.trim();if(!val){alert('Enter a habit');return;}db.collection('habits').doc(val).set({habit:val,timestamp:Date.now()});showNotification();document.getElementById('habitInput').value='';loadHabits();}
+function loadHabits(){const list=document.getElementById('habitList');if(!list) return;list.innerHTML='';db.collection('habits').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().habit;list.appendChild(div);});});}
 
-async function loadJournals(){
-  const list=document.getElementById('journalList'); list.innerHTML='';
-  const snap=await getDocs(collection(db,'journals'));
-  snap.forEach(docu=>{
-    const div=document.createElement('div'); div.className='entry';
-    div.textContent=docu.data().title + ' ('+docu.data().date+')';
-    list.appendChild(div);
-  });
-}
-loadJournals();
+function saveJournal(){const date=document.getElementById('journalDate').value;const title=document.getElementById('journalTitle').value.trim();const text=document.getElementById('journalText').value.trim();if(!date||!title||!text){alert('Fill all fields');return;}db.collection('journals').doc(title).set({date,title,text,timestamp:Date.now()});showNotification();document.getElementById('journalDate').value='';document.getElementById('journalTitle').value='';document.getElementById('journalText').value='';loadJournals();}
+function loadJournals(){const list=document.getElementById('journalList');if(!list) return;list.innerHTML='';db.collection('journals').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().title+' ('+doc.data().date+')';list.appendChild(div);});});}
 
-// CHARACTER TRAIT SECTION
-const charSec=document.createElement('div');
-charSec.id='character'; charSec.className='section';
-charSec.innerHTML=`
-<h2>Character Traits</h2>
-<select id="traitSelect">
-  <option value="">Select Trait</option>
-  <option>Kindness</option><option>Patience</option><option>Honesty</option>
-</select>
-<textarea id="traitInstance" placeholder="Elaborate instance..."></textarea>
-<button id="saveTrait">Save Trait</button>
-<div id="traitList"></div>
-`;
-document.body.appendChild(charSec);
+function saveTrait(){const trait=document.getElementById('traitSelect').value;const inst=document.getElementById('traitInstance').value.trim();if(!trait||!inst){alert('Select trait and write instance');return;}db.collection('traits').doc(trait).set({trait,instance:inst,timestamp:Date.now()});showNotification();document.getElementById('traitSelect').value='';document.getElementById('traitInstance').value='';loadTraits();}
+function loadTraits(){const list=document.getElementById('traitList');if(!list) return;list.innerHTML='';db.collection('traits').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().trait+': '+doc.data().instance;list.appendChild(div);});});}
 
-document.getElementById('saveTrait').addEventListener('click',async ()=>{
-  const trait=document.getElementById('traitSelect').value;
-  const inst=document.getElementById('traitInstance').value.trim();
-  if(!trait||!inst) return alert('Select trait and write instance');
-  await setDoc(doc(db,'traits',trait),{trait,instance:inst,timestamp:Date.now()});
-  showNotification();
-  document.getElementById('traitSelect').value=''; document.getElementById('traitInstance').value='';
-  loadTraits();
-});
+function saveMood(){const mood=document.getElementById('moodSelect').value;const reason=document.getElementById('moodReason').value.trim();if(!mood||!reason){alert('Select mood and write reason');return;}db.collection('moods').doc(mood).set({mood,reason,timestamp:Date.now()});showNotification();document.getElementById('moodSelect').value='';document.getElementById('moodReason').value='';loadMoods();}
+function loadMoods(){const list=document.getElementById('moodList');if(!list) return;list.innerHTML='';db.collection('moods').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().mood+': '+doc.data().reason;list.appendChild(div);});});}
 
-async function loadTraits(){
-  const list=document.getElementById('traitList'); list.innerHTML='';
-  const snap=await getDocs(collection(db,'traits'));
-  snap.forEach(docu=>{
-    const div=document.createElement('div'); div.className='entry';
-    div.textContent=docu.data().trait+': '+docu.data().instance;
-    list.appendChild(div);
-  });
-}
-loadTraits();
+function saveRem(){const text=document.getElementById('remText').value.trim();const date=document.getElementById('remDate').value;if(!text||!date){alert('Fill all fields');return;}db.collection('reminders').doc(text).set({text,date,timestamp:Date.now()});showPopup('Reminder Saved');document.getElementById('remText').value='';document.getElementById('remDate').value='';loadReminders();}
+function loadReminders(){const list=document.getElementById('remList');if(!list) return;list.innerHTML='';db.collection('reminders').get().then(snap=>{snap.forEach(doc=>{const div=document.createElement('div');div.className='entry';div.textContent=doc.data().date+' - '+doc.data().text;list.appendChild(div);});});}
 
-// MOOD SECTION
-const moodSec=document.createElement('div');
-moodSec.id='mood'; moodSec.className='section';
-moodSec.innerHTML=`
-<h2>Mood Tracker</h2>
-<select id="moodSelect">
-  <option value="">Select Mood</option>
-  <option>Happy</option><option>Sad</option><option>Excited</option><option>Angry</option>
-</select>
-<textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
-<button id="saveMood">Save Mood</button>
-<div id="moodList"></div>
-`;
-document.body.appendChild(moodSec);
-
-document.getElementById('saveMood').addEventListener('click',async ()=>{
-  const mood=document.getElementById('moodSelect').value;
-  const reason=document.getElementById('moodReason').value.trim();
-  if(!mood||!reason) return alert('Select mood and write reason');
-  await setDoc(doc(db,'moods',mood),{mood,reason,timestamp:Date.now()});
-  showNotification();
-  document.getElementById('moodSelect').value=''; document.getElementById('moodReason').value='';
-  loadMoods();
-});
-
-async function loadMoods(){
-  const list=document.getElementById('moodList'); list.innerHTML='';
-  const snap=await getDocs(collection(db,'moods'));
-  snap.forEach(docu=>{
-    const div=document.createElement('div'); div.className='entry';
-    div.textContent=docu.data().mood+': '+docu.data().reason;
-    list.appendChild(div);
-  });
-}
-loadMoods();
-
-// REMINDER SECTION
-const remSec=document.createElement('div');
-remSec.id='reminder'; remSec.className='section';
-remSec.innerHTML=`
-<h2>Reminders</h2>
-<input type="text" id="remText" placeholder="Reminder text">
-<input type="date" id="remDate" class="calendar">
-<button id="saveRem">Save Reminder</button>
-<div id="remList"></div>
-`;
-document.body.appendChild(remSec);
-
-document.getElementById('saveRem').addEventListener('click',async ()=>{
-  const text=document.getElementById('remText').value.trim();
-  const date=document.getElementById('remDate').value;
-  if(!text||!date) return alert('Fill all fields');
-  await setDoc(doc(db,'reminders',text),{text,date,timestamp:Date.now()});
-  showPopup('Reminder Saved');
-  document.getElementById('remText').value=''; document.getElementById('remDate').value='';
-  loadReminders();
-});
-
-async function loadReminders(){
-  const list=document.getElementById('remList'); list.innerHTML='';
-  const snap=await getDocs(collection(db,'reminders'));
-  snap.forEach(docu=>{
-    const div=document.createElement('div'); div.className='entry';
-    div.textContent=docu.data().date+' - '+docu.data().text;
-    list.appendChild(div);
-  });
-}
-loadReminders();
-
+// Load all lists on startup
+loadHabits(); loadJournals(); loadTraits(); loadMoods(); loadReminders();
 </script>
+
 </body>
 </html>
