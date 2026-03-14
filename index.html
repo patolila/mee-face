@@ -5,41 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FaceMe App</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
-  body { background: linear-gradient(to bottom, #f0f8ff, #a1c4fd); min-height:100vh; display:flex; justify-content:center; align-items:center; }
-
+  * {margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
+  body {background: linear-gradient(135deg, #1a1a1a, #2c2c2c); color:#fff; min-height:100vh; display:flex; justify-content:center; align-items:center;}
+  button {cursor:pointer;}
+  
   /* Cover Page */
-  #cover { width:100%; max-width:450px; padding:20px; display:flex; flex-direction:column; align-items:center; text-align:center; transition:0.5s; }
-  #profile-pic { width:160px; height:160px; border-radius:50%; background:#fff; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer; }
-  #profile-pic img { width:100%; height:100%; object-fit:cover; }
-  #cover-description { color:#333; font-size:18px; margin-bottom:20px; }
-  #start-btn { padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; cursor:pointer; transition:0.3s; animation: bounce 1s infinite alternate; }
-  @keyframes bounce { 0%{transform:translateY(0);}100%{transform:translateY(-8px);} }
+  #cover {width:100%; max-width:480px; text-align:center; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  #profile-pic {width:160px; height:160px; border-radius:50%; background:#333; border:3px solid #4a90e2; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-bottom:15px; cursor:pointer;}
+  #profile-pic img {width:100%; height:100%; object-fit:cover;}
+  #cover-description {margin-bottom:20px; font-size:18px;}
+  #start-btn {padding:15px 25px; font-size:20px; border:none; border-radius:12px; background:#4a90e2; color:#fff; animation: bounce 1s infinite alternate;}
+  @keyframes bounce {0%{transform:translateY(0);}100%{transform:translateY(-8px);}}
 
-  /* Menu / Icons Page */
-  #menu { width:100%; max-width:500px; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
-  .icons-container { display:grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap:20px; justify-items:center; margin-top:40px; }
-  .icon { width:130px; height:130px; background:#fff; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; transition:0.3s; }
-  .icon:hover { transform:scale(1.1); box-shadow:0 8px 18px rgba(0,0,0,0.3); }
-  .icon img { width:60px; height:60px; margin-bottom:10px; }
-  .icon span { font-size:16px; font-weight:bold; color:#333; }
+  /* Menu / Icons */
+  #menu {display:none; flex-direction:column; align-items:center; width:100%; max-width:500px;}
+  .icons-container {display:flex; gap:20px; overflow-x:auto; padding:20px;}
+  .icon {min-width:120px; min-height:120px; background:#444; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,0.4); transition:0.3s;}
+  .icon:hover {transform:scale(1.1); box-shadow:0 8px 18px rgba(0,0,0,0.6);}
+  .icon img {width:60px; height:60px; margin-bottom:10px;}
+  .icon span {font-size:16px; font-weight:bold;}
 
   /* Sections */
-  .section { width:100%; max-width:450px; display:none; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; text-align:center; margin-top:20px; }
-  .section h2 { margin-bottom:15px; color:#333; }
-  input, textarea, select { padding:10px; margin:5px 0; border-radius:8px; border:1px solid #ccc; width:100%; }
-  textarea { resize:none; }
-  .save-btn { padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff; cursor:pointer; }
-  .back-btn { margin-top:15px; padding:8px 15px; border:none; border-radius:8px; background:#e74c3c; color:#fff; cursor:pointer; }
+  .section {display:none; flex-direction:column; align-items:center; padding:20px; max-width:480px; width:100%;}
+  .section h2 {margin-bottom:15px;}
+  input, textarea, select {padding:10px; margin:5px 0; border-radius:8px; border:none; width:100%;}
+  textarea {resize:none;}
+  .save-btn {padding:10px 20px; margin-top:10px; border:none; border-radius:8px; background:#27ae60; color:#fff;}
+  .back-btn {margin-top:15px; padding:8px 15px; border:none; border-radius:8px; background:#e74c3c; color:#fff;}
 
   /* Notification */
-  .notification { position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5; }
-
-  @media (max-width:480px){
-    .icon { width:110px; height:110px; }
-    .icon img { width:50px; height:50px; }
-    input, textarea, select { width:100%; }
-  }
+  .notification {position:fixed; top:20px; right:20px; background:#e74c3c; color:#fff; padding:8px 15px; border-radius:10px; display:none; z-index:5;}
 </style>
 </head>
 <body>
@@ -52,18 +47,18 @@
     </label>
     <input type="file" id="profile-upload" style="display:none;">
   </div>
-  <div id="cover-description">Start your personal growth journey: track habits, mood, character traits, and reminders!</div>
+  <div id="cover-description">This website is for your personal growth journey. Track habits, mood, character traits, and reminders!</div>
   <button id="start-btn">Start Your Journey</button>
 </div>
 
 <!-- Menu / Icons -->
 <div id="menu">
   <div class="icons-container">
-    <div class="icon" id="habit-icon"><img src="https://img.icons8.com/ios/50/000000/todo-list.png"/><span>Habit</span></div>
-    <div class="icon" id="journal-icon"><img src="https://img.icons8.com/ios/50/000000/journal.png"/><span>Journal</span></div>
-    <div class="icon" id="mood-icon"><img src="https://img.icons8.com/ios/50/000000/happy.png"/><span>Mood</span></div>
-    <div class="icon" id="character-icon"><img src="https://img.icons8.com/ios/50/000000/positive-dynamic.png"/><span>Character</span></div>
-    <div class="icon" id="reminder-icon"><img src="https://img.icons8.com/ios/50/000000/alarm.png"/><span>Reminder</span></div>
+    <div class="icon" id="habit-icon"><img src="https://img.icons8.com/ios/50/ffffff/todo-list.png"/><span>Habit</span></div>
+    <div class="icon" id="journal-icon"><img src="https://img.icons8.com/ios/50/ffffff/journal.png"/><span>Journal</span></div>
+    <div class="icon" id="mood-icon"><img src="https://img.icons8.com/ios/50/ffffff/happy.png"/><span>Mood</span></div>
+    <div class="icon" id="character-icon"><img src="https://img.icons8.com/ios/50/ffffff/positive-dynamic.png"/><span>Character</span></div>
+    <div class="icon" id="reminder-icon"><img src="https://img.icons8.com/ios/50/ffffff/alarm.png"/><span>Reminder</span></div>
   </div>
 </div>
 
@@ -125,6 +120,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
 import { getFirestore, collection, setDoc, doc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-storage.js";
 
+// Your Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCdfjTsBr8jM01tyPeHqCD6IBhaBNWG4zs",
   authDomain: "facemeapp-da5fc.firebaseapp.com",
