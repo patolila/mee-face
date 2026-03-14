@@ -1,241 +1,577 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Face Me</title>
+
 <style>
+
 body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
 }
-nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 40px;
-    background:rgba(0,0,0,0.3);
+
+header{
+text-align:center;
+font-size:40px;
+padding:20px;
 }
-nav h1{
-    margin:0;
-    font-size:24px;
+
+.container{
+display:flex;
+height:90vh;
 }
-nav a{
-    color:white;
-    text-decoration:none;
-    margin-left:20px;
-    font-size:16px;
+
+.menu{
+width:230px;
+background:#1c1c1c;
+padding-top:20px;
+text-align:center;
 }
-nav a:hover{
-    color:#38bdf8;
+
+.menu button{
+display:block;
+width:85%;
+margin:10px auto;
+padding:12px;
+border:none;
+background:#00bfff;
+color:white;
+border-radius:8px;
+cursor:pointer;
 }
-.hero{
-    text-align:center;
-    padding:100px 20px;
+
+.menu button:disabled{
+background:#555;
 }
-.hero h2{
-    font-size:48px;
-    margin-bottom:10px;
+
+.content{
+flex:1;
+padding:40px;
+overflow-y:auto;
 }
-.hero p{
-    font-size:18px;
-    opacity:0.8;
+
+.hidden{
+display:none;
 }
-.search{
-    margin-top:30px;
+
+.profilePic{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+position:absolute;
+top:20px;
+left:20px;
+border:2px solid white;
 }
-.search input{
-    padding:12px;
-    width:260px;
-    border:none;
-    border-radius:6px;
+
+input, textarea, select{
+padding:10px;
+margin:10px;
+width:250px;
 }
-.search button{
-    padding:12px 18px;
-    border:none;
-    border-radius:6px;
-    background:#38bdf8;
-    color:white;
-    cursor:pointer;
+
+textarea{
+height:90px;
 }
-.search button:hover{
-    background:#0ea5e9;
-}
-section{
-    max-width:800px;
-    margin:auto;
-    padding:40px 20px;
-}
-.card{
-    background:rgba(255,255,255,0.05);
-    padding:25px;
-    border-radius:10px;
-    margin-top:20px;
-}
-textarea, input, select{
-    width:100%;
-    border:none;
-    border-radius:6px;
-    padding:10px;
-    margin-top:10px;
-}
-button{
-    margin-top:10px;
-    padding:10px 18px;
-    border:none;
-    border-radius:6px;
-    background:#38bdf8;
-    color:white;
-    cursor:pointer;
-}
-button:hover{
-    background:#0ea5e9;
-}
+
 ul{
-    list-style:none;
-    padding-left:0;
+list-style:none;
+padding-left:0;
 }
-li{
-    margin-top:5px;
-    background:rgba(255,255,255,0.1);
-    padding:8px;
-    border-radius:6px;
+
+.card{
+background:#1e1e1e;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
 }
-footer{
-    text-align:center;
-    padding:30px;
-    opacity:0.6;
-}
+
 </style>
 </head>
+
 <body>
 
-<nav>
-<h1>Face Me</h1>
-<div>
-<a href="#home">Home</a>
-<a href="#journey">Journey</a>
-<a href="#traits">Traits</a>
-<a href="#mood">Mood</a>
-<a href="#journal">Journal</a>
+<header>FACE ME</header>
+
+<img id="displayPic" class="profilePic">
+
+<div class="container">
+
+<div class="menu">
+
+<button onclick="showPage('loginPage')">Login</button>
+<button onclick="showPage('profilePage')">Create Profile</button>
+
+<button id="habitsBtn" disabled onclick="showPage('habitsPage')">Habits</button>
+<button id="journalBtn" disabled onclick="showPage('journalPage')">Journal</button>
+<button id="traitsBtn" disabled onclick="showPage('traitsPage')">Character</button>
+<button id="reminderBtn" disabled onclick="showPage('reminderPage')">Reminder</button>
+<button id="moodBtn" disabled onclick="showPage('moodPage')">Mood</button>
+
+<button onclick="showPage('homePage')">Dashboard</button>
+
 </div>
-</nav>
 
-<section id="home" class="hero">
-<h2>Become the Person You Admire</h2>
-<p>A place to reflect, grow and track your traits.</p>
-<div class="search">
-<input type="text" placeholder="Search a trait...">
-<button>Search</button>
+<div class="content">
+
+<!-- DASHBOARD -->
+
+<div id="homePage" class="hidden">
+
+<h2 id="welcomeMsg"></h2>
+
+<div class="card">
+<h3>Statistics</h3>
+<p id="habitStat"></p>
+<p id="journalStat"></p>
+<p id="moodStat"></p>
 </div>
-</section>
 
-<section id="journey" class="card">
-<h3>Today's Reflection</h3>
-<textarea id="reflectionText" placeholder="Write about your actions today..."></textarea>
-<label><input type="checkbox" id="goodTrait"> Practiced the trait</label><br>
-<label><input type="checkbox" id="badTrait"> Failed today</label><br>
-<button onclick="saveReflection()">Save Reflection</button>
-<ul id="reflectionList"></ul>
-</section>
+</div>
 
-<section id="mood" class="card">
-<h3>Mood Tracker</h3>
-<button onclick="addMood()">Record Mood</button>
-<ul id="moodList"></ul>
-</section>
 
-<section id="journal" class="card">
-<h3>Journal</h3>
-<input type="date" id="journalDate">
-<textarea id="journalEntry" placeholder="Write your journal here..."></textarea>
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Password"><br>
+
+<button onclick="signup()">Sign Up</button>
+<button onclick="login()">Log In</button>
+
+</div>
+
+
+<!-- PROFILE -->
+
+<div id="profilePage" class="hidden">
+
+<h2>Create Profile</h2>
+
+<input id="username" placeholder="Username"><br>
+
+<input type="file" id="profilePicInput"><br>
+
+<button onclick="createProfile()">Create Profile</button>
+
+</div>
+
+
+<!-- HABITS -->
+
+<div id="habitsPage" class="hidden">
+
+<h2>Habit Tracker</h2>
+
+<input id="habitInput" placeholder="New Habit">
+
+<button onclick="addHabit()">Add Habit</button>
+
+<ul id="habitList"></ul>
+
+</div>
+
+
+<!-- JOURNAL -->
+
+<div id="journalPage" class="hidden">
+
+<h2>Journal</h2>
+
+<textarea id="journalText" placeholder="Write today's thoughts"></textarea>
+
+<br>
+
 <button onclick="saveJournal()">Save Entry</button>
-<button onclick="loadJournal()">Load Entry</button>
-</section>
 
-<footer>
-<p>Face Me • A space for growth and honesty</p>
-</footer>
+<ul id="journalList"></ul>
+
+</div>
+
+
+<!-- CHARACTER TRAITS -->
+
+<div id="traitsPage" class="hidden">
+
+<h2>Character Traits</h2>
+
+<input id="traitInput" placeholder="Trait">
+
+<select id="traitType">
+<option value="good">Good</option>
+<option value="bad">Bad</option>
+</select>
+
+<button onclick="addTrait()">Add Trait</button>
+
+<h3>Good Traits</h3>
+<ul id="goodTraits"></ul>
+
+<h3>Bad Traits</h3>
+<ul id="badTraits"></ul>
+
+</div>
+
+
+<!-- REMINDERS -->
+
+<div id="reminderPage" class="hidden">
+
+<h2>Reminders</h2>
+
+<input id="reminderInput" placeholder="Reminder">
+
+<button onclick="addReminder()">Add</button>
+
+<ul id="reminderList"></ul>
+
+</div>
+
+
+<!-- MOOD -->
+
+<div id="moodPage" class="hidden">
+
+<h2>Mood Tracker</h2>
+
+<select id="moodSelect">
+<option>Happy</option>
+<option>Neutral</option>
+<option>Sad</option>
+<option>Angry</option>
+</select>
+
+<button onclick="saveMood()">Save Mood</button>
+
+<ul id="moodList"></ul>
+
+</div>
+
+
+</div>
+</div>
+
 
 <script>
-// Mood Tracker
-function addMood(){
-    let mood = prompt("How is your mood today?");
-    if(mood){
-        let reason = prompt("Why do you feel that way?");
-        if(reason){
-            let entry = {mood, reason, date: new Date().toLocaleString()};
-            let moods = JSON.parse(localStorage.getItem('moods') || "[]");
-            moods.push(entry);
-            localStorage.setItem('moods', JSON.stringify(moods));
-            renderMoods();
-        }
-    }
+
+/* PAGE NAVIGATION */
+
+function showPage(page){
+
+let pages=[
+"homePage",
+"loginPage",
+"profilePage",
+"habitsPage",
+"journalPage",
+"traitsPage",
+"reminderPage",
+"moodPage"
+]
+
+pages.forEach(p=>{
+document.getElementById(p).classList.add("hidden")
+})
+
+document.getElementById(page).classList.remove("hidden")
+
+updateStats()
+
 }
 
-function renderMoods(){
-    let list = document.getElementById('moodList');
-    let moods = JSON.parse(localStorage.getItem('moods') || "[]");
-    list.innerHTML = "";
-    moods.forEach(m => {
-        let li = document.createElement('li');
-        li.textContent = `${m.date} — Mood: ${m.mood}, Reason: ${m.reason}`;
-        list.appendChild(li);
-    });
-}
-renderMoods();
 
-// Journal
+/* SIGNUP */
+
+function signup(){
+
+localStorage.setItem("email",email.value)
+localStorage.setItem("password",password.value)
+
+alert("Account created")
+
+}
+
+
+/* LOGIN */
+
+function login(){
+
+if(
+email.value===localStorage.getItem("email") &&
+password.value===localStorage.getItem("password")
+){
+
+unlockMenu()
+
+showPage("homePage")
+
+}
+
+}
+
+
+/* PROFILE */
+
+function createProfile(){
+
+let name=username.value
+let file=profilePicInput.files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+localStorage.setItem("username",name)
+localStorage.setItem("profilePic",reader.result)
+
+displayPic.src=reader.result
+
+unlockMenu()
+
+showPage("homePage")
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+
+/* UNLOCK FEATURES */
+
+function unlockMenu(){
+
+habitsBtn.disabled=false
+journalBtn.disabled=false
+traitsBtn.disabled=false
+reminderBtn.disabled=false
+moodBtn.disabled=false
+
+}
+
+
+/* HABITS */
+
+let habits=JSON.parse(localStorage.getItem("habits"))||[]
+
+function addHabit(){
+
+let habit=habitInput.value
+
+habits.push({name:habit,done:false})
+
+localStorage.setItem("habits",JSON.stringify(habits))
+
+renderHabits()
+
+}
+
+function toggleHabit(index){
+
+habits[index].done=!habits[index].done
+
+localStorage.setItem("habits",JSON.stringify(habits))
+
+renderHabits()
+
+}
+
+function renderHabits(){
+
+habitList.innerHTML=""
+
+habits.forEach((h,i)=>{
+
+let li=document.createElement("li")
+
+li.innerHTML=`<input type="checkbox" ${h.done?"checked":""}
+onclick="toggleHabit(${i})"> ${h.name}`
+
+habitList.appendChild(li)
+
+})
+
+}
+
+
+/* JOURNAL */
+
+let journal=JSON.parse(localStorage.getItem("journal"))||[]
+
 function saveJournal(){
-    let date = document.getElementById('journalDate').value;
-    let entry = document.getElementById('journalEntry').value;
-    if(date && entry){
-        localStorage.setItem('journal_' + date, entry);
-        alert("Journal entry saved!");
-    } else {
-        alert("Select a date and write something first.");
-    }
+
+let entry={
+text:journalText.value,
+date:new Date().toLocaleDateString()
 }
 
-function loadJournal(){
-    let date = document.getElementById('journalDate').value;
-    if(!date) { alert("Pick a date."); return; }
-    let entry = localStorage.getItem('journal_' + date);
-    document.getElementById('journalEntry').value = entry || "";
-    if(!entry) alert("No entry for this date.");
+journal.push(entry)
+
+localStorage.setItem("journal",JSON.stringify(journal))
+
+renderJournal()
+
 }
 
-// Daily Reflection
-function saveReflection(){
-    let text = document.getElementById('reflectionText').value;
-    let good = document.getElementById('goodTrait').checked;
-    let bad = document.getElementById('badTrait').checked;
-    if(!text && !good && !bad){ alert("Write or check at least one box."); return; }
-    let reflections = JSON.parse(localStorage.getItem('reflections') || "[]");
-    reflections.push({
-        date: new Date().toLocaleString(),
-        text,
-        good,
-        bad
-    });
-    localStorage.setItem('reflections', JSON.stringify(reflections));
-    renderReflections();
+function renderJournal(){
+
+journalList.innerHTML=""
+
+journal.forEach(j=>{
+
+let li=document.createElement("li")
+
+li.textContent=j.date+" : "+j.text
+
+journalList.appendChild(li)
+
+})
+
 }
 
-function renderReflections(){
-    let list = document.getElementById('reflectionList');
-    let reflections = JSON.parse(localStorage.getItem('reflections') || "[]");
-    list.innerHTML = "";
-    reflections.forEach(r => {
-        let li = document.createElement('li');
-        li.textContent = `${r.date} — ${r.text} ${r.good ? "[Good]" : ""} ${r.bad ? "[Bad]" : ""}`;
-        list.appendChild(li);
-    });
+
+/* CHARACTER TRAITS */
+
+let goodTraitsData=JSON.parse(localStorage.getItem("goodTraits"))||[]
+let badTraitsData=JSON.parse(localStorage.getItem("badTraits"))||[]
+
+function addTrait(){
+
+let trait=traitInput.value
+
+if(traitType.value==="good")
+goodTraitsData.push(trait)
+else
+badTraitsData.push(trait)
+
+localStorage.setItem("goodTraits",JSON.stringify(goodTraitsData))
+localStorage.setItem("badTraits",JSON.stringify(badTraitsData))
+
+renderTraits()
+
 }
-renderReflections();
+
+function renderTraits(){
+
+goodTraits.innerHTML=""
+badTraits.innerHTML=""
+
+goodTraitsData.forEach(t=>{
+let li=document.createElement("li")
+li.textContent=t
+goodTraits.appendChild(li)
+})
+
+badTraitsData.forEach(t=>{
+let li=document.createElement("li")
+li.textContent=t
+badTraits.appendChild(li)
+})
+
+}
+
+
+/* REMINDERS */
+
+let reminders=JSON.parse(localStorage.getItem("reminders"))||[]
+
+function addReminder(){
+
+reminders.push(reminderInput.value)
+
+localStorage.setItem("reminders",JSON.stringify(reminders))
+
+renderReminders()
+
+}
+
+function renderReminders(){
+
+reminderList.innerHTML=""
+
+reminders.forEach(r=>{
+let li=document.createElement("li")
+li.textContent=r
+reminderList.appendChild(li)
+})
+
+}
+
+
+/* MOOD */
+
+let moods=JSON.parse(localStorage.getItem("moods"))||[]
+
+function saveMood(){
+
+let entry={
+mood:moodSelect.value,
+date:new Date().toLocaleDateString()
+}
+
+moods.push(entry)
+
+localStorage.setItem("moods",JSON.stringify(moods))
+
+renderMood()
+
+}
+
+function renderMood(){
+
+moodList.innerHTML=""
+
+moods.forEach(m=>{
+let li=document.createElement("li")
+li.textContent=m.date+" : "+m.mood
+moodList.appendChild(li)
+})
+
+}
+
+
+/* DASHBOARD */
+
+function updateStats(){
+
+let usernameStored=localStorage.getItem("username") || ""
+
+welcomeMsg.textContent="Welcome back "+usernameStored
+
+habitStat.textContent="Habits: "+habits.length
+journalStat.textContent="Journal entries: "+journal.length
+moodStat.textContent="Mood logs: "+moods.length
+
+}
+
+
+/* LOAD DATA */
+
+window.onload=function(){
+
+if(localStorage.getItem("profilePic"))
+displayPic.src=localStorage.getItem("profilePic")
+
+renderHabits()
+renderJournal()
+renderTraits()
+renderReminders()
+renderMood()
+updateStats()
+
+}
+
 </script>
 
 </body>
 </html>
+```
+
