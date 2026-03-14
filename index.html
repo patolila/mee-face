@@ -2,13 +2,13 @@
 <html>
 <head>
 <title>FaceMe</title>
-
 <style>
 body{
   font-family:Arial;
   margin:0;
   background:#0f172a;
   color:white;
+  overflow-x:hidden;
 }
 
 header{
@@ -36,6 +36,7 @@ button{
   cursor:pointer;
   display:inline-flex;
   align-items:center;
+  transition: transform 0.3s;
 }
 
 button:hover{
@@ -97,9 +98,20 @@ textarea{
 
 .cover{
   text-align:center;
-  padding:80px;
+  padding:60px 20px;
   font-size:28px;
   animation:fade 2s;
+  position:relative;
+  overflow:hidden;
+}
+
+.cover img{
+  border-radius:50%;
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  margin-top:20px;
+  border:3px solid #22c55e;
 }
 
 .back-btn{
@@ -117,9 +129,32 @@ textarea{
   from{opacity:0}
   to{opacity:1}
 }
+
+/* Bouncing start button */
+@keyframes bounce{
+  0%,20%,50%,80%,100%{transform:translateY(0)}
+  40%{transform:translateY(-15px)}
+  60%{transform:translateY(-8px)}
+}
+
+/* Sparkle dots */
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:white;
+  border-radius:50%;
+  animation:float 5s linear infinite;
+  opacity:0.7;
+}
+
+@keyframes float{
+  0%{transform:translateY(0) translateX(0);}
+  50%{transform:translateY(-80px) translateX(50px);}
+  100%{transform:translateY(-160px) translateX(0);}
+}
 </style>
 </head>
-
 <body>
 
 <div class="notification" id="notif"></div>
@@ -127,9 +162,13 @@ textarea{
 
 <header>FaceMe</header>
 
-<div class="cover">
+<div class="cover" id="cover">
   <p>A safe place to grow, reflect and build yourself.</p>
-  <button onclick="openSection('menu')">Start Journey</button>
+  
+  <input type="file" id="faceUpload" accept="image/*" style="margin:10px auto; display:block;">
+  <img id="faceImg" src="" alt="" style="display:none;">
+
+  <button id="startBtn" onclick="openSection('menu')">Start Journey</button>
 </div>
 
 <div class="container">
@@ -209,6 +248,34 @@ function openSection(id){
   document.querySelectorAll(".section").forEach(s=>s.style.display="none")
   document.getElementById(id).style.display="block"
 }
+
+// Cover button animation
+document.getElementById("startBtn").style.animation="bounce 2s infinite"
+
+// Sparkles
+for(let i=0;i<12;i++){
+  let s=document.createElement("div")
+  s.className="sparkle"
+  s.style.left=Math.random()*100+"%"
+  s.style.animationDuration=(3+Math.random()*4)+"s"
+  document.getElementById("cover").appendChild(s)
+}
+
+// Profile picture upload
+let faceUpload=document.getElementById("faceUpload")
+let faceImg=document.getElementById("faceImg")
+faceUpload.addEventListener("change", e=>{
+  let reader=new FileReader()
+  reader.onload=()=> {
+    faceImg.src=reader.result
+    faceImg.style.display="block"
+    localStorage.setItem("face", reader.result)
+  }
+  reader.readAsDataURL(e.target.files[0])
+})
+// Load saved face
+let savedFace=localStorage.getItem("face")
+if(savedFace){faceImg.src=savedFace; faceImg.style.display="block"}
 
 // HABIT
 function addHabit(){
@@ -316,6 +383,5 @@ function saveMood(mood){
   document.getElementById("moodResult").innerText="Your mood: "+mood
 }
 </script>
-
 </body>
 </html>
