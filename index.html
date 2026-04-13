@@ -1,374 +1,215 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FaceMe</title>
+<title>FaceMe+</title>
 
-<!-- ICONS (better set) -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
 
-/* ===== GLOBAL ===== */
 body{
 margin:0;
-font-family:'Poppins',sans-serif;
-background:linear-gradient(135deg,#141e30,#243b55);
+font-family:Arial;
+background:#111;
 color:white;
+text-align:center;
+transition:.3s;
 }
 
-/* ===== GLASS UI ===== */
-.glass{
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(15px);
-border-radius:20px;
-box-shadow:0 10px 40px rgba(0,0,0,0.4);
+.light{
+background:#f5f5f5;
+color:#111;
 }
 
-/* ===== COVER ===== */
-#cover{
-height:100vh;
+/* toggle */
+#themeToggle{
+position:fixed;
+top:10px;
+right:10px;
+cursor:pointer;
+}
+
+/* PIN LOCK */
+#lock{
+position:fixed;
+inset:0;
+background:#000;
 display:flex;
-flex-direction:column;
 justify-content:center;
 align-items:center;
-gap:15px;
+flex-direction:column;
+z-index:10;
 }
 
-#profile{
-width:150px;
-height:150px;
-border-radius:50%;
-overflow:hidden;
-border:3px solid #6ec1ff;
-box-shadow:0 0 25px rgba(110,193,255,0.5);
-}
-
-#profile img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-#start{
-padding:14px 35px;
-border:none;
-border-radius:30px;
-background:linear-gradient(45deg,#6ec1ff,#3a8dff);
-color:white;
-font-size:16px;
-cursor:pointer;
-transition:.3s;
-}
-
-#start:hover{
-transform:scale(1.1);
-box-shadow:0 0 15px #6ec1ff;
-}
-
-/* ===== MENU ===== */
-#menu{
-display:none;
-padding:20px;
-}
-
-.icons{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:20px;
-}
-
-.icon{
-padding:20px;
-text-align:center;
-cursor:pointer;
-transition:.3s;
-}
-
-.icon i{
-font-size:32px;
-margin-bottom:10px;
-background:linear-gradient(45deg,#6ec1ff,#9b59ff);
--webkit-background-clip:text;
-color:transparent;
-}
-
-.icon:hover{
-transform:translateY(-6px) scale(1.05);
-}
-
-/* ===== SECTIONS ===== */
-.section{
-display:none;
-padding:20px;
-animation:fade .3s ease;
-}
-
-@keyframes fade{
-from{opacity:0;transform:translateY(10px)}
-to{opacity:1;transform:translateY(0)}
-}
-
-input,textarea,select{
-width:90%;
-padding:12px;
-margin:10px;
-border:none;
-border-radius:12px;
-background:rgba(255,255,255,0.1);
-color:white;
-}
-
-button{
-padding:10px 20px;
-border:none;
-border-radius:12px;
-background:linear-gradient(45deg,#6ec1ff,#3a8dff);
-color:white;
-cursor:pointer;
-transition:.2s;
-}
-
-button:hover{
-transform:scale(1.05);
-}
-
-.back{
-background:linear-gradient(45deg,#ff4d4d,#ff7a7a);
-}
-
-/* ===== ENTRY CARDS ===== */
-.entry{
-padding:12px;
-margin:10px;
-border-radius:12px;
-background:rgba(255,255,255,0.08);
-transition:.2s;
-}
-
-.entry:hover{
-transform:scale(1.02);
-}
+/* rest same style simplified */
+.section{display:none;padding:20px}
+.entry{background:#222;padding:10px;margin:10px;border-radius:8px}
+button{padding:8px 15px;margin:5px;border:none;border-radius:6px;cursor:pointer}
 
 </style>
 </head>
 
 <body>
 
-<!-- COVER -->
-<div id="cover">
-<div id="profile" class="glass">
-<img id="profileImg">
+<div id="themeToggle">🌗</div>
+
+<!-- LOCK -->
+<div id="lock">
+<h2>Enter PIN</h2>
+<input id="pinInput" type="password">
+<button onclick="checkPin()">Enter</button>
 </div>
 
-<input type="file" id="picUpload">
-
-<h2>FaceMe</h2>
-<p>Track. Reflect. Improve.</p>
-
-<button id="start">Enter</button>
+<!-- COVER -->
+<div id="cover">
+<h2>FaceMe+</h2>
+<button onclick="startApp()">Start</button>
 </div>
 
 <!-- MENU -->
-<div id="menu">
-<div class="icons">
-
-<div class="icon glass" onclick="openSection('habit')">
-<i class="fas fa-arrows-rotate"></i>
-<p>Habits</p>
-</div>
-
-<div class="icon glass" onclick="openSection('journal')">
-<i class="fas fa-pen-nib"></i>
-<p>Journal</p>
-</div>
-
-<div class="icon glass" onclick="openSection('mood')">
-<i class="fas fa-brain"></i>
-<p>Mood</p>
-</div>
-
-<div class="icon glass" onclick="openSection('character')">
-<i class="fas fa-user-astronaut"></i>
-<p>Character</p>
-</div>
-
-<div class="icon glass" onclick="openSection('reminder')">
-<i class="fas fa-bell"></i>
-<p>Reminder</p>
-</div>
-
-</div>
+<div id="menu" style="display:none">
+<button onclick="openSection('habit')">Habit</button>
+<button onclick="openSection('journal')">Journal</button>
+<button onclick="openSection('mood')">Mood</button>
 </div>
 
 <!-- HABIT -->
 <div id="habit" class="section">
-<h2>Habits</h2>
-<input id="habitInput" placeholder="New habit">
+<h3>Habits</h3>
+<input id="habitInput">
 <button onclick="saveHabit()">Save</button>
 <div id="habitList"></div>
-<button class="back" onclick="goBack()">Back</button>
 </div>
 
 <!-- JOURNAL -->
 <div id="journal" class="section">
-<h2>Journal</h2>
-<input type="date" id="journalDate">
-<textarea id="journalText" placeholder="Write your thoughts..."></textarea>
+<h3>Journal</h3>
+<input id="search" placeholder="Search..." oninput="loadJournal()">
+<textarea id="journalText"></textarea>
 <button onclick="saveJournal()">Save</button>
 <div id="journalList"></div>
-<button class="back" onclick="goBack()">Back</button>
 </div>
 
 <!-- MOOD -->
 <div id="mood" class="section">
-<h2>Mood</h2>
+<h3>Mood</h3>
 <select id="moodSelect">
 <option>Happy</option>
 <option>Sad</option>
-<option>Focused</option>
-<option>Confused</option>
 </select>
-<textarea id="moodReason" placeholder="Why?"></textarea>
 <button onclick="saveMood()">Save</button>
-<div id="moodList"></div>
-<button class="back" onclick="goBack()">Back</button>
-</div>
-
-<!-- CHARACTER -->
-<div id="character" class="section">
-<h2>Character</h2>
-<input id="traitInput" placeholder="Trait">
-<textarea id="traitExample" placeholder="Example"></textarea>
-<button onclick="saveTrait()">Save</button>
-<div id="traitList"></div>
-<button class="back" onclick="goBack()">Back</button>
-</div>
-
-<!-- REMINDER -->
-<div id="reminder" class="section">
-<h2>Reminder</h2>
-<input id="reminderInput" placeholder="Reminder">
-<button onclick="saveReminder()">Save</button>
-<div id="reminderList"></div>
-<button class="back" onclick="goBack()">Back</button>
+<div id="moodStats"></div>
 </div>
 
 <script>
 
-/* NAV */
-start.onclick=()=>{
+/* PIN */
+let savedPin=localStorage.getItem("pin")||"1234"
+
+function checkPin(){
+if(pinInput.value===savedPin){
+lock.style.display="none"
+}
+}
+
+/* theme */
+themeToggle.onclick=()=>{
+document.body.classList.toggle("light")
+localStorage.setItem("theme",document.body.classList.contains("light"))
+}
+if(localStorage.getItem("theme")=="true"){
+document.body.classList.add("light")
+}
+
+/* nav */
+function startApp(){
 cover.style.display="none"
 menu.style.display="block"
 }
-
-function openSection(name){
-menu.style.display="none"
-document.getElementById(name).style.display="block"
-}
-
-function goBack(){
+function openSection(id){
 document.querySelectorAll(".section").forEach(s=>s.style.display="none")
-menu.style.display="block"
+document.getElementById(id).style.display="block"
 }
 
-/* PROFILE */
-picUpload.onchange=e=>{
-let reader=new FileReader()
-reader.onload=()=>{
-profileImg.src=reader.result
-localStorage.setItem("profile",reader.result)
-}
-reader.readAsDataURL(e.target.files[0])
-}
-profileImg.src=localStorage.getItem("profile")
-
-/* STORAGE */
+/* helpers */
 function save(k,d){localStorage.setItem(k,JSON.stringify(d))}
 function get(k){return JSON.parse(localStorage.getItem(k)||"[]")}
 
-/* HABIT */
+/* HABIT + STREAK */
 function saveHabit(){
 let d=get("habits")
-d.push(habitInput.value)
+d.push({text:habitInput.value,date:Date.now()})
 save("habits",d)
-habitInput.value=""
 loadHabits()
 }
 function loadHabits(){
 habitList.innerHTML=""
-get("habits").forEach(x=>{
-habitList.innerHTML+=`<div class="entry">${x}</div>`
+let d=get("habits")
+d.forEach((x,i)=>{
+habitList.innerHTML+=`
+<div class="entry">
+${x.text}
+<button onclick="deleteHabit(${i})">❌</button>
+</div>`
 })
 }
+function deleteHabit(i){
+let d=get("habits")
+d.splice(i,1)
+save("habits",d)
+loadHabits()
+}
 
-/* JOURNAL */
+/* JOURNAL + SEARCH */
 function saveJournal(){
-let d=get("journals")
-d.push({date:journalDate.value,text:journalText.value})
-save("journals",d)
+let d=get("journal")
+d.push(journalText.value)
+save("journal",d)
 journalText.value=""
 loadJournal()
 }
 function loadJournal(){
 journalList.innerHTML=""
-get("journals").forEach(x=>{
-journalList.innerHTML+=`<div class="entry"><b>${x.date}</b><br>${x.text}</div>`
+let q=search.value.toLowerCase()
+get("journal").forEach((x,i)=>{
+if(x.toLowerCase().includes(q)){
+journalList.innerHTML+=`
+<div class="entry">
+${x}
+<button onclick="deleteJournal(${i})">❌</button>
+</div>`
+}
 })
 }
+function deleteJournal(i){
+let d=get("journal")
+d.splice(i,1)
+save("journal",d)
+loadJournal()
+}
 
-/* MOOD */
+/* MOOD STATS */
 function saveMood(){
 let d=get("moods")
-d.push({m:moodSelect.value,r:moodReason.value})
+d.push(moodSelect.value)
 save("moods",d)
-moodReason.value=""
 loadMood()
 }
 function loadMood(){
-moodList.innerHTML=""
-get("moods").forEach(x=>{
-moodList.innerHTML+=`<div class="entry">${x.m}<br>${x.r}</div>`
-})
+let d=get("moods")
+let count={}
+d.forEach(m=>count[m]=(count[m]||0)+1)
+moodStats.innerHTML=""
+for(let m in count){
+moodStats.innerHTML+=`<div>${m}: ${count[m]}</div>`
+}
 }
 
-/* TRAIT */
-function saveTrait(){
-let d=get("traits")
-d.push({t:traitInput.value,e:traitExample.value})
-save("traits",d)
-traitExample.value=""
-loadTraits()
-}
-function loadTraits(){
-traitList.innerHTML=""
-get("traits").forEach(x=>{
-traitList.innerHTML+=`<div class="entry"><b>${x.t}</b><br>${x.e}</div>`
-})
-}
-
-/* REMINDER */
-function saveReminder(){
-let d=get("reminders")
-d.push(reminderInput.value)
-save("reminders",d)
-reminderInput.value=""
-loadReminders()
-}
-function loadReminders(){
-reminderList.innerHTML=""
-get("reminders").forEach(x=>{
-reminderList.innerHTML+=`<div class="entry">${x}</div>`
-})
-}
-
-/* LOAD */
+/* load */
 loadHabits()
 loadJournal()
 loadMood()
-loadTraits()
-loadReminders()
 
 </script>
 
