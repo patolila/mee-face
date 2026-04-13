@@ -1,37 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FaceMe</title>
 
+<!-- ICONS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
 <style>
 
+/* GLOBAL */
 body{
 margin:0;
-font-family:Arial;
-background:#111;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
-text-align:center;
 }
 
-/* Cover */
+/* GLASS EFFECT */
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border-radius:20px;
+box-shadow:0 8px 30px rgba(0,0,0,0.3);
+}
 
+/* COVER */
 #cover{
 height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
+gap:15px;
 }
 
 #profile{
-width:160px;
-height:160px;
+width:140px;
+height:140px;
 border-radius:50%;
-background:#222;
 overflow:hidden;
-border:4px solid #4da6ff;
-margin-bottom:20px;
+border:3px solid #4da6ff;
 }
 
 #profile img{
@@ -41,50 +51,50 @@ object-fit:cover;
 }
 
 #start{
-padding:14px 30px;
-background:#4da6ff;
+padding:14px 35px;
 border:none;
-border-radius:8px;
-font-size:18px;
+border-radius:30px;
+background:#4da6ff;
 color:white;
+font-size:16px;
 cursor:pointer;
-animation:bounce 1s infinite alternate;
+transition:.3s;
 }
 
-@keyframes bounce{
-from{transform:translateY(0)}
-to{transform:translateY(-8px)}
+#start:hover{
+transform:scale(1.1);
 }
 
-/* Icons */
-
+/* MENU */
 #menu{
 display:none;
 padding:20px;
 }
 
 .icons{
-display:flex;
-overflow-x:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
 gap:20px;
-justify-content:center;
 }
 
 .icon{
-background:#222;
 padding:20px;
-border-radius:15px;
-min-width:100px;
+text-align:center;
 cursor:pointer;
 transition:.3s;
 }
 
-.icon:hover{
-transform:scale(1.1);
+.icon i{
+font-size:30px;
+margin-bottom:10px;
+color:#4da6ff;
 }
 
-/* Sections */
+.icon:hover{
+transform:translateY(-5px) scale(1.05);
+}
 
+/* SECTION */
 .section{
 display:none;
 padding:20px;
@@ -92,16 +102,18 @@ padding:20px;
 
 input,textarea,select{
 width:90%;
-padding:10px;
+padding:12px;
 margin:10px;
-border-radius:8px;
 border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.1);
+color:white;
 }
 
 button{
 padding:10px 20px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 background:#4da6ff;
 color:white;
 cursor:pointer;
@@ -111,13 +123,12 @@ cursor:pointer;
 background:#ff4d4d;
 }
 
-/* entries */
-
+/* ENTRY */
 .entry{
-background:#222;
 padding:10px;
 margin:10px;
-border-radius:8px;
+border-radius:10px;
+background:rgba(255,255,255,0.08);
 }
 
 </style>
@@ -126,346 +137,216 @@ border-radius:8px;
 <body>
 
 <!-- COVER -->
-
 <div id="cover">
-
-<div id="profile">
+<div id="profile" class="glass">
 <img id="profileImg">
 </div>
 
 <input type="file" id="picUpload">
 
 <h2>FaceMe</h2>
+<p>Track your habits. Understand yourself.</p>
 
-<p>This space helps you track your habits, thoughts, and growth.</p>
-
-<button id="start">Start Journey</button>
-
+<button id="start">Enter</button>
 </div>
-
 
 <!-- MENU -->
-
 <div id="menu">
-
 <div class="icons">
 
-<div class="icon" onclick="openSection('habit')">Habit</div>
+<div class="icon glass" onclick="openSection('habit')">
+<i class="fas fa-repeat"></i>
+<p>Habit</p>
+</div>
 
-<div class="icon" onclick="openSection('journal')">Journal</div>
+<div class="icon glass" onclick="openSection('journal')">
+<i class="fas fa-book"></i>
+<p>Journal</p>
+</div>
 
-<div class="icon" onclick="openSection('mood')">Mood</div>
+<div class="icon glass" onclick="openSection('mood')">
+<i class="fas fa-face-smile"></i>
+<p>Mood</p>
+</div>
 
-<div class="icon" onclick="openSection('character')">Character</div>
+<div class="icon glass" onclick="openSection('character')">
+<i class="fas fa-user"></i>
+<p>Character</p>
+</div>
 
-<div class="icon" onclick="openSection('reminder')">Reminder</div>
-
+<div class="icon glass" onclick="openSection('reminder')">
+<i class="fas fa-bell"></i>
+<p>Reminder</p>
 </div>
 
 </div>
-
+</div>
 
 <!-- HABIT -->
-
 <div id="habit" class="section">
-
 <h2>Habit</h2>
-
-<input id="habitInput" placeholder="Habit you want to adopt">
-
+<input id="habitInput" placeholder="New habit">
 <button onclick="saveHabit()">Save</button>
-
 <div id="habitList"></div>
-
 <button class="back" onclick="goBack()">Back</button>
-
 </div>
-
 
 <!-- JOURNAL -->
-
 <div id="journal" class="section">
-
 <h2>Journal</h2>
-
 <input type="date" id="journalDate">
-
-<textarea id="journalText" placeholder="Write your journal"></textarea>
-
+<textarea id="journalText" placeholder="Write..."></textarea>
 <button onclick="saveJournal()">Save</button>
-
 <div id="journalList"></div>
-
 <button class="back" onclick="goBack()">Back</button>
-
 </div>
 
-
 <!-- MOOD -->
-
 <div id="mood" class="section">
-
 <h2>Mood</h2>
-
 <select id="moodSelect">
 <option>Happy</option>
 <option>Sad</option>
-<option>Excited</option>
+<option>Focused</option>
 </select>
-
-<textarea id="moodReason" placeholder="Why do you feel this way?"></textarea>
-
+<textarea id="moodReason" placeholder="Why?"></textarea>
 <button onclick="saveMood()">Save</button>
-
 <div id="moodList"></div>
-
 <button class="back" onclick="goBack()">Back</button>
-
 </div>
-
 
 <!-- CHARACTER -->
-
 <div id="character" class="section">
-
-<h2>Character Trait</h2>
-
-<input id="traitInput" placeholder="Trait e.g Kindness">
-
-<textarea id="traitExample" placeholder="Example of this trait"></textarea>
-
+<h2>Character</h2>
+<input id="traitInput" placeholder="Trait">
+<textarea id="traitExample" placeholder="Example"></textarea>
 <button onclick="saveTrait()">Save</button>
-
 <div id="traitList"></div>
-
 <button class="back" onclick="goBack()">Back</button>
-
 </div>
-
 
 <!-- REMINDER -->
-
 <div id="reminder" class="section">
-
 <h2>Reminder</h2>
-
 <input id="reminderInput" placeholder="Reminder">
-
 <button onclick="saveReminder()">Save</button>
-
 <div id="reminderList"></div>
-
 <button class="back" onclick="goBack()">Back</button>
-
 </div>
-
-
 
 <script>
 
-/* cover */
-
-start.onclick=function(){
+/* NAV */
+start.onclick=()=>{
 cover.style.display="none"
 menu.style.display="block"
 }
 
-/* profile pic */
-
-picUpload.onchange=function(e){
-
-let reader=new FileReader()
-
-reader.onload=function(){
-profileImg.src=reader.result
-localStorage.setItem("profile",reader.result)
-}
-
-reader.readAsDataURL(e.target.files[0])
-
-}
-
-profileImg.src=localStorage.getItem("profile")
-
-
-
-/* navigation */
-
 function openSection(name){
-
 menu.style.display="none"
-
 document.getElementById(name).style.display="block"
-
 }
 
 function goBack(){
-
-let sections=document.querySelectorAll(".section")
-
-sections.forEach(s=>s.style.display="none")
-
+document.querySelectorAll(".section").forEach(s=>s.style.display="none")
 menu.style.display="block"
-
 }
 
+/* PROFILE */
+picUpload.onchange=e=>{
+let reader=new FileReader()
+reader.onload=()=>{
+profileImg.src=reader.result
+localStorage.setItem("profile",reader.result)
+}
+reader.readAsDataURL(e.target.files[0])
+}
+profileImg.src=localStorage.getItem("profile")
 
+/* STORAGE HELPERS */
+function save(key,data){
+localStorage.setItem(key,JSON.stringify(data))
+}
+function get(key){
+return JSON.parse(localStorage.getItem(key)||"[]")
+}
 
-/* SAVE FUNCTIONS */
-
+/* HABIT */
 function saveHabit(){
-
-let val=habitInput.value
-
-let data=JSON.parse(localStorage.getItem("habits")||"[]")
-
-data.push(val)
-
-localStorage.setItem("habits",JSON.stringify(data))
-
+let data=get("habits")
+data.push(habitInput.value)
+save("habits",data)
 habitInput.value=""
-
 loadHabits()
-
 }
-
 function loadHabits(){
-
-let data=JSON.parse(localStorage.getItem("habits")||"[]")
-
 habitList.innerHTML=""
-
-data.forEach(x=>{
+get("habits").forEach(x=>{
 habitList.innerHTML+=`<div class="entry">${x}</div>`
 })
-
 }
 
-
-
+/* JOURNAL */
 function saveJournal(){
-
-let data=JSON.parse(localStorage.getItem("journals")||"[]")
-
-data.push({
-date:journalDate.value,
-text:journalText.value
-})
-
-localStorage.setItem("journals",JSON.stringify(data))
-
+let data=get("journals")
+data.push({d:journalDate.value,t:journalText.value})
+save("journals",data)
 journalText.value=""
-
 loadJournal()
-
 }
-
 function loadJournal(){
-
-let data=JSON.parse(localStorage.getItem("journals")||"[]")
-
 journalList.innerHTML=""
-
-data.forEach(x=>{
-journalList.innerHTML+=`<div class="entry"><b>${x.date}</b><br>${x.text}</div>`
+get("journals").forEach(x=>{
+journalList.innerHTML+=`<div class="entry"><b>${x.d}</b><br>${x.t}</div>`
 })
-
 }
 
-
-
+/* MOOD */
 function saveMood(){
-
-let data=JSON.parse(localStorage.getItem("moods")||"[]")
-
-data.push({
-mood:moodSelect.value,
-reason:moodReason.value
-})
-
-localStorage.setItem("moods",JSON.stringify(data))
-
+let data=get("moods")
+data.push({m:moodSelect.value,r:moodReason.value})
+save("moods",data)
 moodReason.value=""
-
 loadMood()
-
 }
-
 function loadMood(){
-
-let data=JSON.parse(localStorage.getItem("moods")||"[]")
-
 moodList.innerHTML=""
-
-data.forEach(x=>{
-moodList.innerHTML+=`<div class="entry">${x.mood}<br>${x.reason}</div>`
+get("moods").forEach(x=>{
+moodList.innerHTML+=`<div class="entry">${x.m}<br>${x.r}</div>`
 })
-
 }
 
-
-
+/* TRAITS */
 function saveTrait(){
-
-let data=JSON.parse(localStorage.getItem("traits")||"[]")
-
-data.push({
-trait:traitInput.value,
-example:traitExample.value
-})
-
-localStorage.setItem("traits",JSON.stringify(data))
-
+let data=get("traits")
+data.push({t:traitInput.value,e:traitExample.value})
+save("traits",data)
 traitExample.value=""
-
 loadTraits()
-
 }
-
 function loadTraits(){
-
-let data=JSON.parse(localStorage.getItem("traits")||"[]")
-
 traitList.innerHTML=""
-
-data.forEach(x=>{
-traitList.innerHTML+=`<div class="entry"><b>${x.trait}</b><br>${x.example}</div>`
+get("traits").forEach(x=>{
+traitList.innerHTML+=`<div class="entry"><b>${x.t}</b><br>${x.e}</div>`
 })
-
 }
 
-
-
+/* REMINDER */
 function saveReminder(){
-
-let data=JSON.parse(localStorage.getItem("reminders")||"[]")
-
+let data=get("reminders")
 data.push(reminderInput.value)
-
-localStorage.setItem("reminders",JSON.stringify(data))
-
+save("reminders",data)
 reminderInput.value=""
-
 loadReminders()
-
 }
-
 function loadReminders(){
-
-let data=JSON.parse(localStorage.getItem("reminders")||"[]")
-
 reminderList.innerHTML=""
-
-data.forEach(x=>{
+get("reminders").forEach(x=>{
 reminderList.innerHTML+=`<div class="entry">${x}</div>`
 })
-
 }
 
-
-
-/* load saved data */
-
+/* LOAD ALL */
 loadHabits()
 loadJournal()
 loadMood()
@@ -475,4 +356,4 @@ loadReminders()
 </script>
 
 </body>
-  </html>
+</html>
