@@ -2,158 +2,109 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FaceMe</title>
+<title>FaceMe Pro</title>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
 
-/* ===== GLOBAL ===== */
+/* BACKGROUND */
 body{
 margin:0;
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:Arial;
 color:white;
-text-align:center;
-transition:.3s;
+background:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee') no-repeat center/cover;
 }
 
-/* ===== COVER ===== */
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+z-index:-1;
+}
+
+/* COVER */
 #cover{
 height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);
-animation:fadeIn 1s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:scale(0.95)}
-to{opacity:1;transform:scale(1)}
-}
-
-#cover img{
-width:120px;
-margin-bottom:20px;
-filter:drop-shadow(0 0 10px white);
 }
 
 #start{
 padding:15px 40px;
 border:none;
 border-radius:30px;
-background:white;
-color:black;
+background:#4da6ff;
+color:white;
 font-size:18px;
 cursor:pointer;
-transition:.3s;
 }
 
-#start:hover{
-transform:scale(1.1);
-}
-
-/* ===== MENU ===== */
+/* DASHBOARD */
 #menu{
 display:none;
 padding:20px;
 }
 
+.stats{
+display:flex;
+gap:10px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.card{
+background:rgba(255,255,255,0.1);
+padding:15px;
+border-radius:10px;
+min-width:100px;
+}
+
+/* ICON GRID */
 .icons{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-gap:20px;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:15px;
+margin-top:20px;
 }
 
 .icon{
-padding:25px;
-border-radius:20px;
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
+padding:20px;
+border-radius:15px;
+background:rgba(255,255,255,0.1);
 cursor:pointer;
-transition:.3s;
 }
 
 .icon i{
-font-size:50px; /* BIGGER ICONS */
+font-size:40px;
 margin-bottom:10px;
-color:#4da6ff;
 }
 
-.icon:hover{
-transform:translateY(-8px) scale(1.05);
-box-shadow:0 10px 25px rgba(0,0,0,0.4);
-}
-
-/* ===== SECTIONS ===== */
-.section{
-display:none;
-padding:20px;
-animation:fade .3s ease;
-}
-
-@keyframes fade{
-from{opacity:0}
-to{opacity:1}
-}
+/* SECTION */
+.section{display:none;padding:20px}
 
 input,textarea,select{
 width:90%;
-padding:12px;
-margin:10px;
-border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.1);
-color:white;
-}
-
-button{
-padding:10px 20px;
-border:none;
-border-radius:10px;
-background:#4da6ff;
-color:white;
-cursor:pointer;
-}
-
-.back{
-background:#ff4d4d;
-}
-
-/* ===== ENTRY ===== */
-.entry{
-background:rgba(255,255,255,0.08);
 padding:10px;
 margin:10px;
-border-radius:10px;
+border-radius:8px;
+border:none;
 }
 
-.entry button{
-background:red;
-margin-left:10px;
+.entry{
+background:rgba(255,255,255,0.1);
+margin:10px;
+padding:10px;
+border-radius:8px;
 }
 
-/* ===== THEME TOGGLE ===== */
-#themeToggle{
-position:fixed;
-top:10px;
-right:10px;
-font-size:22px;
-cursor:pointer;
-}
-
-/* ===== LOCK ===== */
-#lock{
-position:fixed;
-inset:0;
-background:black;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:10;
+/* CHART */
+.bar{
+height:20px;
+background:#4da6ff;
+margin:5px;
 }
 
 </style>
@@ -161,53 +112,30 @@ z-index:10;
 
 <body>
 
-<div id="themeToggle">🌗</div>
-
-<!-- LOCK -->
-<div id="lock">
-<h2>Enter PIN</h2>
-<input id="pinInput" type="password">
-<button onclick="checkPin()">Enter</button>
-</div>
+<div class="overlay"></div>
 
 <!-- COVER -->
 <div id="cover">
-<img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
 <h1>FaceMe</h1>
-<p>Track • Reflect • Improve</p>
-<button id="start">Start Journey</button>
+<p id="prompt"></p>
+<button id="start">Start</button>
 </div>
 
 <!-- MENU -->
 <div id="menu">
+
+<div class="stats">
+<div class="card">Habits: <span id="hCount"></span></div>
+<div class="card">Journals: <span id="jCount"></span></div>
+<div class="card">Moods: <span id="mCount"></span></div>
+</div>
+
 <div class="icons">
-
-<div class="icon" onclick="openSection('habit')">
-<i class="fas fa-dumbbell"></i>
-<p>Habits</p>
+<div class="icon" onclick="openSection('habit')"><i class="fas fa-dumbbell"></i><p>Habit</p></div>
+<div class="icon" onclick="openSection('journal')"><i class="fas fa-book"></i><p>Journal</p></div>
+<div class="icon" onclick="openSection('mood')"><i class="fas fa-brain"></i><p>Mood</p></div>
 </div>
 
-<div class="icon" onclick="openSection('journal')">
-<i class="fas fa-book-open"></i>
-<p>Journal</p>
-</div>
-
-<div class="icon" onclick="openSection('mood')">
-<i class="fas fa-brain"></i>
-<p>Mood</p>
-</div>
-
-<div class="icon" onclick="openSection('character')">
-<i class="fas fa-user"></i>
-<p>Character</p>
-</div>
-
-<div class="icon" onclick="openSection('reminder')">
-<i class="fas fa-bell"></i>
-<p>Reminder</p>
-</div>
-
-</div>
 </div>
 
 <!-- HABIT -->
@@ -216,17 +144,14 @@ z-index:10;
 <input id="habitInput">
 <button onclick="saveHabit()">Save</button>
 <div id="habitList"></div>
-<button class="back" onclick="goBack()">Back</button>
 </div>
 
 <!-- JOURNAL -->
 <div id="journal" class="section">
 <h2>Journal</h2>
-<input id="search" placeholder="Search..." oninput="loadJournal()">
 <textarea id="journalText"></textarea>
 <button onclick="saveJournal()">Save</button>
 <div id="journalList"></div>
-<button class="back" onclick="goBack()">Back</button>
 </div>
 
 <!-- MOOD -->
@@ -238,63 +163,50 @@ z-index:10;
 <option>Focused</option>
 </select>
 <button onclick="saveMood()">Save</button>
-<div id="moodStats"></div>
-<button class="back" onclick="goBack()">Back</button>
+
+<h3>Stats</h3>
+<div id="chart"></div>
 </div>
 
 <script>
 
-/* PIN */
-let savedPin=localStorage.getItem("pin")||"1234"
-function checkPin(){
-if(pinInput.value===savedPin){
-lock.style.display="none"
-}
-}
-
-/* THEME */
-themeToggle.onclick=()=>{
-document.body.classList.toggle("light")
-}
+/* PROMPT */
+let prompts=[
+"Be honest with yourself today",
+"What are you avoiding?",
+"What did you improve?"
+]
+prompt.innerText=prompts[Math.floor(Math.random()*prompts.length)]
 
 /* NAV */
 start.onclick=()=>{
 cover.style.display="none"
 menu.style.display="block"
+updateStats()
 }
-
 function openSection(id){
 menu.style.display="none"
 document.getElementById(id).style.display="block"
-}
-
-function goBack(){
-document.querySelectorAll(".section").forEach(s=>s.style.display="none")
-menu.style.display="block"
 }
 
 /* STORAGE */
 function save(k,d){localStorage.setItem(k,JSON.stringify(d))}
 function get(k){return JSON.parse(localStorage.getItem(k)||"[]")}
 
-/* HABIT */
+/* HABIT + STREAK */
 function saveHabit(){
 let d=get("habits")
-d.push(habitInput.value)
+let today=new Date().toDateString()
+d.push({text:habitInput.value,date:today})
 save("habits",d)
 loadHabits()
+updateStats()
 }
 function loadHabits(){
 habitList.innerHTML=""
-get("habits").forEach((x,i)=>{
-habitList.innerHTML+=`<div class="entry">${x}<button onclick="deleteHabit(${i})">X</button></div>`
+get("habits").forEach(x=>{
+habitList.innerHTML+=`<div class="entry">${x.text} (${x.date})</div>`
 })
-}
-function deleteHabit(i){
-let d=get("habits")
-d.splice(i,1)
-save("habits",d)
-loadHabits()
 }
 
 /* JOURNAL */
@@ -304,38 +216,39 @@ d.push(journalText.value)
 save("journal",d)
 journalText.value=""
 loadJournal()
+updateStats()
 }
 function loadJournal(){
 journalList.innerHTML=""
-let q=search.value.toLowerCase()
-get("journal").forEach((x,i)=>{
-if(x.toLowerCase().includes(q)){
-journalList.innerHTML+=`<div class="entry">${x}<button onclick="deleteJournal(${i})">X</button></div>`
-}
+get("journal").forEach(x=>{
+journalList.innerHTML+=`<div class="entry">${x}</div>`
 })
 }
-function deleteJournal(i){
-let d=get("journal")
-d.splice(i,1)
-save("journal",d)
-loadJournal()
-}
 
-/* MOOD */
+/* MOOD + CHART */
 function saveMood(){
 let d=get("moods")
 d.push(moodSelect.value)
 save("moods",d)
 loadMood()
+updateStats()
 }
 function loadMood(){
 let d=get("moods")
 let count={}
 d.forEach(m=>count[m]=(count[m]||0)+1)
-moodStats.innerHTML=""
+
+chart.innerHTML=""
 for(let m in count){
-moodStats.innerHTML+=`<div>${m}: ${count[m]}</div>`
+chart.innerHTML+=`<div>${m}</div><div class="bar" style="width:${count[m]*30}px"></div>`
 }
+}
+
+/* DASHBOARD */
+function updateStats(){
+hCount.innerText=get("habits").length
+jCount.innerText=get("journal").length
+mCount.innerText=get("moods").length
 }
 
 /* LOAD */
